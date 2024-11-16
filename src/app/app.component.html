@@ -1,0 +1,11 @@
+<div class="TabBar">
+    <a href="#/Current">
+        <div [class.Active]="this.CurrentTab == 'Current'">Current</div>
+    </a>
+    <a href="#/History">
+        <div [class.Active]="this.CurrentTab == 'History'">History</div>
+    </a>
+</div>
+<div class="Body">
+    <router-outlet />
+</div>

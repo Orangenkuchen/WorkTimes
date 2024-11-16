@@ -1,0 +1,54 @@
+@ThemeColor: #cf7703;
+
+:host {
+    flex-grow: 1;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.TabBar {
+    display: flex;
+    flex-direction: row;
+
+    @tabBarHeight: 40px;
+
+    height: @tabBarHeight;
+
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+    border-bottom-color: #EEEEEE;
+
+    a {
+        flex-grow: 1;
+
+        display: flex;
+        flex-direction: row;
+
+        text-decoration: none;
+        color: black;
+
+        div {
+            flex-grow: 1;
+
+            text-align: center;
+            line-height: @tabBarHeight;
+
+            &.Active {
+                border-bottom-style: solid;
+                border-bottom-color: @ThemeColor;
+                border-bottom-width: 3px;
+
+                font-weight: bold;
+            }
+        }
+    }
+}
+
+.Body {
+    flex-grow: 1;
+}
+
+button.TabElement {
+
+}

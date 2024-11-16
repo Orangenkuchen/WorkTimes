@@ -1,0 +1,4 @@
+<div *ngIf="this.CurrentDayWorkPromise | async; let currentWork">
+    <p>current-work works! ({{currentWork | json}})</p>
+    <div [innerHTML]="this.ChartOptions"></div>
+</div>
