@@ -3,7 +3,7 @@ import { TimeRepositoryService } from '../../services/time-repository/time-repos
 import { WorkDay } from '../../entities/WorkDay';
 import { CommonModule } from '@angular/common';
 import { TimeSliceType } from '../../entities/TimeSliceType';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { StateDiagramm } from '../../StateDiagramm/StateDiagramm';
 
 /**
@@ -31,6 +31,8 @@ export class CurrentWorkComponent
         this.timeRepositoryService = timeRepositoryService;
         this.sanitizer = sanitizer;
 
+        this.DayStatusChart = null;
+
         let currentTime = new Date();
         let startOfDay = new Date(
             currentTime.getFullYear(),
@@ -52,42 +54,47 @@ export class CurrentWorkComponent
                     success(workDays[0]);
                 }
                 else {
-                    //success({ Date: currentTime, TimeSlots: [] });
-                    success(
-                        { 
-                            Date: currentTime, 
-                            TimeSlots: 
-                            [ 
-                                {
-                                    Start: new Date(2024, 15, 10, 6, 0),
-                                    End: new Date(2024, 15, 10, 6, 28),
-                                    Type: TimeSliceType.Transfer
-                                },
-                                {
-                                    Start: new Date(2024, 15, 10, 6, 28),
-                                    End: new Date(2024, 15, 10, 17, 30),
-                                    Type: TimeSliceType.Work
-                                },
-                                {
-                                    Start: new Date(2024, 15, 10, 17, 30),
-                                    End: new Date(2024, 15, 10, 17, 56),
-                                    Type: TimeSliceType.Transfer
-                                }
-                            ]
-                        }
-                    );
+                    success({ Date: currentTime, TimeSlots: [] });
                 }
             }
         );
 
-        this.CurrentDayWorkPromise.then((x) => {
-            this.ChartOptions = this.sanitizer.bypassSecurityTrustHtml(StateDiagramm.Create([x, x, x]).outerHTML);
+        this.MonthlyWorkPromise = new Promise<Array<WorkDay>>(
+            async (success, reject) => {
+                let workDays = await timeRepositoryService.GetWorkDays(new Date(startOfDay.getFullYear(), startOfDay.getMonth() - 1, startOfDay.getDate()), startOfDay);
+
+                success(workDays);
+            }
+        );
+
+        this.MonthlyWorkPromise.then((x) => {
+            this.DayStatusChart = this.sanitizer.bypassSecurityTrustHtml(StateDiagramm.Create(x).outerHTML);
         });
     }
 
     public CurrentDayWorkPromise: Promise<WorkDay>;
 
-    public ChartOptions: any;
+    public MonthlyWorkPromise: Promise<Array<WorkDay>>;
 
-    
+    public DayStatusChart: SafeHtml | null;
+
+    private async LoadCurrentDayWork(): Promise<void>
+    {
+        let currentTime = new Date();
+        let startOfDay = new Date(
+            currentTime.getFullYear(),
+            currentTime.getMonth() + 1,
+            currentTime.getDate()
+        );
+        let endOfDay = new Date(
+            currentTime.getFullYear(),
+            currentTime.getMonth() + 1,
+            currentTime.getDate() + 1,
+        );
+        endOfDay.setSeconds(-1);
+
+        let workDays = await this.timeRepositoryService.GetWorkDays(startOfDay, endOfDay);
+
+        
+    }
 }
