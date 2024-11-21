@@ -137,7 +137,11 @@ export class StateDiagramm
                     minMintuesOfDay,
                     maxMinutesOfDay
                 );
-                svgElement.appendChild(sliceRect);
+
+                if (sliceRect != null)
+                {
+                    svgElement.appendChild(sliceRect);
+                }
             }
 
         }              
@@ -224,7 +228,10 @@ export class StateDiagramm
                 result[timeSlice.Type] = 0;
             }
 
-            result[timeSlice.Type] += (timeSlice.End!.getTime() - timeSlice.Start!.getTime()) / 1000 / 60 / 60;
+            if (timeSlice.Start != null && timeSlice.End != null)
+            {
+                result[timeSlice.Type] += (timeSlice.End.getTime() - timeSlice.Start.getTime()) / 1000 / 60 / 60;
+            }
         }
 
         return result;
@@ -338,32 +345,39 @@ export class StateDiagramm
         timeSlice: TimeSlice, 
         yStart: number,
         minMinutesOfDay: number,
-        maxMinutesOfDay: number): SVGRectElement
+        maxMinutesOfDay: number): SVGRectElement | null
     {
-        let sliceRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-
-        if (typeof timeSliceTypeColorHashTable[timeSlice.Type] === 'string') 
+        if (timeSlice.Start != null && timeSlice.End != null)
         {
-            sliceRect.setAttribute("fill", timeSliceTypeColorHashTable[timeSlice.Type]);
+            let sliceRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+
+            if (typeof timeSliceTypeColorHashTable[timeSlice.Type] === 'string') 
+            {
+                sliceRect.setAttribute("fill", timeSliceTypeColorHashTable[timeSlice.Type]);
+            }
+            else 
+            {
+                sliceRect.setAttribute("fill", "#B0B0B0");
+            }
+
+            let millisecondsInDisplayedSliceOfDay = millisecondsInDay - (minMinutesOfDay * 60 * 1000) - (millisecondsInDay - (maxMinutesOfDay * 60 * 1000));
+
+            let xPerMillisecond = (viewBoxYMax - (leftPadding + rightPadding)) / millisecondsInDisplayedSliceOfDay;
+
+            let startMillisecondsOfDay = minMinutesOfDay * 60 * 1000;
+            let xStart = (StateDiagramm.TimeOfDayAsMilliseconds(timeSlice.Start) - startMillisecondsOfDay) * xPerMillisecond;
+
+            sliceRect.setAttribute("x", (xStart + leftPadding).toString());
+            sliceRect.setAttribute("y", yStart.toString());
+            sliceRect.setAttribute("width", ((StateDiagramm.TimeOfDayAsMilliseconds(timeSlice.End) - StateDiagramm.TimeOfDayAsMilliseconds(timeSlice.Start)) * xPerMillisecond).toString());
+            sliceRect.setAttribute("height", (timeBarHeight - timeBarPadding).toString());
+
+            return sliceRect;
         }
-        else 
+        else
         {
-            sliceRect.setAttribute("fill", "#B0B0B0");
+            return null;
         }
-
-        let millisecondsInDisplayedSliceOfDay = millisecondsInDay - (minMinutesOfDay * 60 * 1000) - (millisecondsInDay - (maxMinutesOfDay * 60 * 1000));
-
-        let xPerMillisecond = (viewBoxYMax - (leftPadding + rightPadding)) / millisecondsInDisplayedSliceOfDay;
-
-        let startMillisecondsOfDay = minMinutesOfDay * 60 * 1000;
-        let xStart = (StateDiagramm.TimeOfDayAsMilliseconds(timeSlice.Start!) - startMillisecondsOfDay) * xPerMillisecond;
-
-        sliceRect.setAttribute("x", (xStart + leftPadding).toString());
-        sliceRect.setAttribute("y", yStart.toString());
-        sliceRect.setAttribute("width", ((StateDiagramm.TimeOfDayAsMilliseconds(timeSlice.End!) - StateDiagramm.TimeOfDayAsMilliseconds(timeSlice.Start!)) * xPerMillisecond).toString());
-        sliceRect.setAttribute("height", (timeBarHeight - timeBarPadding).toString());
-
-        return sliceRect;
     }
     // #endregion
 

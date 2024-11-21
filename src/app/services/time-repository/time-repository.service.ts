@@ -69,10 +69,28 @@ export class TimeRepositoryService
         return await new Promise<Array<WorkDay>>(
             (success, reject) =>
             {
-                let request = workTimesObjectStore.index("Date").getAll(IDBKeyRange.bound(from, to))
+                let request = workTimesObjectStore.getAll(IDBKeyRange.bound(from.getTime(), to.getTime()))
 
                 request.onsuccess = () =>
                 {
+                    for (let workDay of <Array<WorkDay>>request.result)
+                    {
+                        workDay.Date = this.ParseToDate(workDay.Date);
+
+                        for (let timeSlots of workDay.TimeSlots)
+                        {
+                            if (timeSlots.Start != null)
+                            {
+                                timeSlots.Start = this.ParseToDate(timeSlots.Start);
+                            }
+
+                            if (timeSlots.End != null)
+                            {
+                                timeSlots.End = this.ParseToDate(timeSlots.End);
+                            }
+                        }
+                    }
+
                     success(request.result);
                 };
 
@@ -96,12 +114,12 @@ export class TimeRepositoryService
     {
         let database = await this.databasePromise;
 
-        let workTimesObjectStore = database.transaction("WorkTimes", "readonly").objectStore("WorkTimes");
+        let workTimesObjectStore = database.transaction("WorkTimes", "readwrite").objectStore("WorkTimes");
 
         await new Promise<void>(
             (success, reject) =>
             {
-                let request = workTimesObjectStore.put(workDay, workDay.Date);
+                let request = workTimesObjectStore.put(workDay, workDay.Date.getTime());
 
                 request.onsuccess = () =>
                 {
@@ -179,7 +197,26 @@ export class TimeRepositoryService
     {
         let workTimesObjectStore = database.createObjectStore("WorkTimes", { autoIncrement: true });
 
-        workTimesObjectStore.createIndex("Date", "DriveToWorkStart");
+        workTimesObjectStore.createIndex("Date", "Date");
+    }
+    // #endregion
+
+    // #region ParseToDate
+    /**
+     * Wandelt eine Datum, welches im Format JSON-String oder Millisekunden seit 1970 in Date um.
+     * 
+     * @param date Das Datum, dass umgewandelt werden soll
+     */
+    private ParseToDate(date: Date | number | string): Date
+    {
+        if (typeof date === "number" || typeof date === "string")
+        {
+            return new Date(date);
+        }
+        else
+        {
+            return date;
+        }
     }
     // #endregion
 }

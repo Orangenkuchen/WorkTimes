@@ -1,9 +1,21 @@
-import { AfterViewInit, Directive, ElementRef, Input, OnDestroy } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 
+/**
+ * Die Anzahl der Millisekunden in einer Sekunden
+ */
 const MillisecondsInSecond: number = 1000;
+/**
+ * Die Anzahl der Millisekunden in einer Minute
+ */
 const MillisecondsInMinute: number = MillisecondsInSecond * 60;
+/**
+ * Die Anzahl der Millisekunden in einer Stunde
+ */
 const MillisecondsInHour: number = MillisecondsInMinute * 60
 
+/**
+ * Stellt eine Zeit nach Stunden, Minuten, Sekunden, ... dar
+ */
 interface TimeFragments
 {
     Hours: number,
@@ -12,11 +24,14 @@ interface TimeFragments
     Milliseconds: number
 }
 
+/**
+ * Schreibt die Zeit seit "timeDifference" oder dem aktuellen Datum an.
+ */
 @Directive({
     selector: '[appLiveTimeSpan]',
     standalone: true
 })
-export class LiveTimeSpanDirective implements OnDestroy, AfterViewInit
+export class LiveTimeSpanDirective implements OnDestroy, OnChanges
 {
     // #region fields
     /**
@@ -28,16 +43,41 @@ export class LiveTimeSpanDirective implements OnDestroy, AfterViewInit
      * Der Timer der die Zeit anzeigt
      */
     private timer: ReturnType<typeof setInterval> | null;
+
+    /**
+     * Der Startzeitpunkt von dem an die Zeitspanne angezeigt werden soll.
+     * Wenn null wird der aktuelle Zeitpunkt angenommen.
+     */
+    @Input() startTime: Date | null;
+
+    /**
+     * Der Endzeitpunkt bis dem die Zeitspanne angezeigt werden soll.
+     * Wenn  null wird der aktuelle Zeitpunkt (live) angezeigt.
+     */
+    @Input() endTime: Date | null;
     // #endregion
 
-
+    // #region ctor
+    /**
+     * Initialisiert die Directive
+     *
+     * @param elementRef Referenz auf das Element, an dem die Directive verwendet wird.
+     */
     public constructor(elementRef: ElementRef)
     {
         this.elementRef = elementRef;
-        this.timeDifference = null;
+        this.startTime = null;
+        this.endTime = null;
         this.timer = null;
+        this.StartTime = null;
+        this.EndTime = null;
     }
+    // #endregion
 
+    // #region ngOnDestroy
+    /**
+     * Wird aufgerufen, bevor die Directive abgebaut wird.
+     */
     public ngOnDestroy(): void
     {
         if (this.timer != null)
@@ -45,24 +85,76 @@ export class LiveTimeSpanDirective implements OnDestroy, AfterViewInit
             clearInterval(this.timer);
         }
     }
+    // #endregion
 
-    public ngAfterViewInit(): void
+    // #region startTime
+    /**
+     * Der Startzeitpunkt von dem an die Zeitspanne angezeigt werden soll.
+     * Wenn null wird der aktuelle Zeitpunkt angenommen.
+     */
+    @Input() StartTime: Date | null;
+    // #endregion
+
+    // #region endTime
+    /**
+     * Der Endzeitpunkt bis dem die Zeitspanne angezeigt werden soll.
+     * Wenn  null wird der aktuelle Zeitpunkt (live) angezeigt.
+     */
+    @Input() EndTime: Date | null;
+    // #endregion
+
+    // #region ngOnChanges
+    /**
+     * Wird aufgerufen, wenn ein Input sich ändern
+     */
+    public ngOnChanges()
     {
-        if (this.timeDifference == null)
+        this.startTime = this.StartTime;
+        this.endTime = this.EndTime;
+        
+        this.ReinitializeDisplay();
+    }
+    // #endregion
+
+    // #region ReinitializeDisplay
+    /**
+     * Initialisiert die Anzeige erneut
+     */
+    private ReinitializeDisplay()
+    {
+        if (this.startTime == null)
         {
-            this.timeDifference = new Date();
+            this.startTime = new Date();
         }
 
-        this.timer = setInterval(() => { this.HandleOnIntervalElapsed(); }, 200);
+        if (this.endTime == null)
+        {
+            this.timer = setInterval(() => { this.HandleOnIntervalElapsed(); }, 200);
+        }
+        else
+        {
+            this.HandleOnIntervalElapsed();
+
+            if (this.timer != null)
+            {
+                clearInterval(this.timer);
+            }
+        }
     }
+    // #endregion
 
-    @Input() timeDifference: Date | null;
-
+    // #region HandleOnIntervalElapsed
+    /**
+     * Wird aufgerufen, wenn der Timer zum rendern abgelaufen ist.
+     * Rendert die Zeit im Format HH:MM:SS
+     */
     private HandleOnIntervalElapsed(): void
     {
-        if (this.timeDifference != null)
+        if (this.startTime != null)
         {
-            let timeDifference = new Date().getTime() - this.timeDifference.getTime();
+            let endTime = this.endTime ?? new Date();
+
+            let timeDifference = endTime.getTime() - this.startTime.getTime();
 
             let timeFragments = this.SplitMillisecondsIntoParts(timeDifference);
 
@@ -71,6 +163,7 @@ export class LiveTimeSpanDirective implements OnDestroy, AfterViewInit
             (<HTMLElement>this.elementRef.nativeElement).innerText = result;
         }
     }
+    // #endregion
 
     // #region SplitMillisecondsIntoParts
     /**
@@ -91,17 +184,15 @@ export class LiveTimeSpanDirective implements OnDestroy, AfterViewInit
         let remainingMilliseconds = milliseconds;
 
         result.Hours = Math.floor(remainingMilliseconds / MillisecondsInHour);
-        remainingMilliseconds = remainingMilliseconds - result.Hours * MillisecondsInHour;
+        remainingMilliseconds -= result.Hours * MillisecondsInHour;
 
         result.Minutes = Math.floor(remainingMilliseconds / MillisecondsInMinute);
-        remainingMilliseconds = remainingMilliseconds - result.Minutes * MillisecondsInMinute;
+        remainingMilliseconds -= result.Minutes * MillisecondsInMinute;
 
         result.Seconds = Math.floor(remainingMilliseconds / MillisecondsInSecond);
-        remainingMilliseconds = remainingMilliseconds - result.Seconds * MillisecondsInSecond;
+        remainingMilliseconds -= result.Seconds * MillisecondsInSecond;
 
         result.Milliseconds = remainingMilliseconds;
-
-        result.Minutes = Math.floor((milliseconds ))
 
         return result;
     }
