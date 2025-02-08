@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1739009832741,
+  "timestamp": 1739026678671,
   "index": "./WorkTimes/index.html",
   "assetGroups": [
     {
@@ -11,12 +11,14 @@
         "ignoreVary": true
       },
       "urls": [
+        "./WorkTimes/chunk-FSCHUIOW.js",
+        "./WorkTimes/chunk-N3JG7LDC.js",
         "./WorkTimes/favicon.ico",
         "./WorkTimes/index.html",
-        "./WorkTimes/main-JE2VMLIX.js",
+        "./WorkTimes/main-RPTYS2FT.js",
         "./WorkTimes/manifest.webmanifest",
         "./WorkTimes/polyfills-FFHMD2TL.js",
-        "./WorkTimes/styles-WVYZKDVS.css"
+        "./WorkTimes/styles-O3OVD4KR.css"
       ],
       "patterns": []
     },
@@ -41,13 +43,15 @@
     "./WorkTimes/assets/fonts/ubuntu-light-webfont.woff2": "09f6b2b4316749b1435f06317006878fc2396530",
     "./WorkTimes/assets/icons/FavIcon.png": "007cccf04825a7c36575e44893e38a070d04b67f",
     "./WorkTimes/assets/icons/FavIcon.svg": "3eba097d4b1274e08de39381513102a8a6f37f36",
+    "./WorkTimes/chunk-FSCHUIOW.js": "421df54e071eb68f18d3433704e95a6def44c159",
+    "./WorkTimes/chunk-N3JG7LDC.js": "a2f04f160be78abd7c5089f4b976edf8922c62ac",
     "./WorkTimes/favicon.ico": "9686238a20b1a621601311666d2341d18fbc7f22",
-    "./WorkTimes/index.html": "14e707b314f882d265e059b6d4896f09dac31976",
-    "./WorkTimes/main-JE2VMLIX.js": "3185aaef2292b22abd771122fc16ef6f8c8e37bf",
+    "./WorkTimes/index.html": "214448ebe27d28e7a3b16afca92b9a5c6dce3750",
+    "./WorkTimes/main-RPTYS2FT.js": "84aa4421fec0f423dc6cd36d25a4d2d7399963c0",
     "./WorkTimes/manifest.webmanifest": "2781ed2403ab0261cec4fabc7b217b88aceeacfb",
     "./WorkTimes/media/ubuntu-light-webfont-2TRHHGVR.woff2": "09f6b2b4316749b1435f06317006878fc2396530",
     "./WorkTimes/polyfills-FFHMD2TL.js": "f49b49a155bc7d192db62a4c15d0a612b460a667",
-    "./WorkTimes/styles-WVYZKDVS.css": "51be27b44afcaa0bacf37c0dbc84d9733e8d5b91"
+    "./WorkTimes/styles-O3OVD4KR.css": "c1aad31ada905d3a47705be6062574ca08a2653d"
   },
   "navigationUrls": [
     {
