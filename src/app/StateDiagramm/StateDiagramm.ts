@@ -259,7 +259,7 @@ export class StateDiagramm
         let scalePath = document.createElementNS("http://www.w3.org/2000/svg", "path");
 
         scalePath.setAttribute("fill", "transparent");
-        scalePath.setAttribute("stroke", "#B0B0B0");
+        scalePath.setAttribute("class", "LegendLine");
 
         let minutesInDay = 24 * 60;
         let hourAmount = Math.floor((minutesInDay - minMinutesOfDay - (minutesInDay - maxMinutesOfDay)) / 60);

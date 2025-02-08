@@ -1,0 +1,29 @@
+
+// Dieses Dictionary gibt die Farben von der Anwendung vor.
+// Es wird beim Compilieren als CSS-Variablen an den Body gehängt.
+// Beim Verwenden vom Darkmode werden die CSS-Variablen mit @DarkColorPallet überschrieben.
+// Wenn die CSS-Variablen verwendet werden muss man sich also in der Anwendung keine Gedanken
+// Um den Darkmode machen, die Farbe in der Variable automatisch geändert wird.
+@BrightColorPallet: {
+    // Die Farbe vom der Schrift
+    FontColor: black;
+    // Die Farbe von ausgebleichter Schrift
+    FontColorDimm: #474747;
+
+    // Die Farbe vom Hintergrund von der Webseite
+    BackgroundColor: #FAFAFA;
+    // Die Farbe vom Containern, welche direkt über dem Seitenhintergrund sind.
+    ContainerColor: #FFFFFF;
+    ContainerBorderColor: #a8a8a8;
+}
+
+// Dieses Dictionary gibt die Farben von der Anwendung im Darkmode vor.
+// Nähere Infromationen siehe: @BrightColorPallet.
+@DarkColorPallet: {
+    FontColor: white;
+    FontColorDimm: #cacaca;
+
+    BackgroundColor: #0a0a0a;
+    ContainerColor: #000000;
+    ContainerBorderColor: #3d3d3d;
+}

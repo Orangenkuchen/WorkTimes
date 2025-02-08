@@ -1,7 +1,10 @@
 <ng-container *ngIf="this.CurrentDayWorkPromise | async; let dayDisplay">
     <div class="Header">
-        <div class="HeaderBlock" [ngSwitch]="dayDisplay.TransferTimeBeforeWork.Start == null &&
-                                            dayDisplay.TransferTimeBeforeWork.End == null">
+        <div class="HeaderBlock"
+             [ngSwitch]="dayDisplay.TransferTimeBeforeWork.Start == null &&
+                         dayDisplay.TransferTimeBeforeWork.End == null"
+             [class.Active]="this.CurrentStatus == this.TimeStatus.DrivingToWork ||
+                             this.CurrentStatus == this.TimeStatus.AfterWork">
             <p>Fahrtweg früh</p>
             <ng-container *ngSwitchCase="true">
                 <p class="Hours">0:00:00</p>
@@ -12,8 +15,11 @@
                                 [EndTime]="dayDisplay.TransferTimeBeforeWork.End"></p>
             </ng-container>
         </div>
-        <div class="HeaderBlock" [ngSwitch]="dayDisplay.WorkTime.Start == null &&
-                                            dayDisplay.WorkTime.End == null">
+        <div class="HeaderBlock"
+             [ngSwitch]="dayDisplay.WorkTime.Start == null &&
+                         dayDisplay.WorkTime.End == null"
+             [class.Active]="this.CurrentStatus == this.TimeStatus.AtWork ||
+                             this.CurrentStatus == this.TimeStatus.AfterWork">
             <p>Arbeit</p>
             <ng-container *ngSwitchCase="true">
                 <p class="Hours">0:00:00</p>
@@ -24,8 +30,11 @@
                                 [EndTime]="dayDisplay.WorkTime.End"></p>
             </ng-container>
         </div>
-        <div class="HeaderBlock" [ngSwitch]="dayDisplay.TransferTimeAfterWork.Start == null &&
-                                            dayDisplay.TransferTimeAfterWork.End == null">
+        <div class="HeaderBlock"
+             [ngSwitch]="dayDisplay.TransferTimeAfterWork.Start == null &&
+                         dayDisplay.TransferTimeAfterWork.End == null"
+             [class.Active]="this.CurrentStatus == this.TimeStatus.DrivingHome ||
+                             this.CurrentStatus == this.TimeStatus.AfterWork">
             <p>Fahrtweg abends</p>
             <ng-container *ngSwitchCase="true">
                 <p class="Hours">0:00:00</p>
@@ -37,17 +46,15 @@
             </ng-container>
         </div>
     </div>
-    <div class="ButtonContainer">
-        <button *ngIf="dayDisplay.TransferTimeBeforeWork.Start == null || 
-                       dayDisplay.TransferTimeAfterWork.Start == null"
+    <div class="ButtonContainer"
+         [ngSwitch]="this.CurrentStatus">
+        <button *ngSwitchCase="this.TimeStatus.Initial"
+            (click)="this.StartTransfer()">Fahrtweg start</button>
+        <button *ngSwitchCase="this.TimeStatus.DrivingToWork"
+            (click)="this.StartWork()">Arbeit start</button>
+        <button *ngSwitchCase="this.TimeStatus.AtWork"
                 (click)="this.StartTransfer()">Fahrtweg start</button>
-        <button *ngIf="dayDisplay.WorkTime.Start == null"
-                (click)="this.StartWork()">Arbeit start</button>
-        <button *ngIf="dayDisplay.WorkTime.End == null &&
-                       dayDisplay.WorkTime.Start"
-                (click)="this.EndWork()">Arbeit stopp</button>
-        <button *ngIf="dayDisplay.TransferTimeAfterWork.End == null &&
-                       dayDisplay.TransferTimeAfterWork.Start != null"
+        <button *ngSwitchCase="this.TimeStatus.DrivingHome"
                 (click)="this.EndTransfer()">Fahrtweg stop</button>
     </div>
 </ng-container>

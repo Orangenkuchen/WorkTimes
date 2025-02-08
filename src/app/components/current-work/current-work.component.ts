@@ -21,6 +21,36 @@ interface DayDisplay
 }
 
 /**
+ * Stellt die Status dar, die an einem Arbeitstag vorkommen können
+ */
+enum TimeStatus {
+    /**
+     * Der initiale Status vor der Arbeit
+     */
+    Initial,
+
+    /**
+     * Die Fahrt zum Einsatzort hin
+     */
+    DrivingToWork,
+
+    /**
+     * Der Einsatz vor Ort
+     */
+    AtWork,
+
+    /**
+     * Die Fahrt nach Hause
+     */
+    DrivingHome,
+
+    /**
+     * Der Status nach der Arbeit
+     */
+    AfterWork
+}
+
+/**
  * Diese Komponente beinhaltet die aktuelle Arbeitszeit
  */
 @Component({
@@ -35,10 +65,25 @@ interface DayDisplay
 })
 export class CurrentWorkComponent
 {
+    // #region fields
+    /**
+     * Servcie zum bereitigen von HTML, Url, ...
+     */
     private readonly sanitizer: DomSanitizer;
 
+    /**
+     * Repository für Arbeitszeiten
+     */
     private readonly timeRepositoryService: TimeRepositoryService;
+    // #endregion
 
+    // #region ctor
+    /**
+     * Initialisiert die Komponente
+     * 
+     * @param timeRepositoryService Servcie zum bereitigen von HTML, Url, ...
+     * @param sanitizer Repository für Arbeitszeiten
+     */
     public constructor(
         timeRepositoryService: TimeRepositoryService,
         sanitizer:DomSanitizer)
@@ -46,13 +91,29 @@ export class CurrentWorkComponent
         this.timeRepositoryService = timeRepositoryService;
         this.sanitizer = sanitizer;
 
+        this.CurrentStatus = TimeStatus.Initial;
+
         this.DayStatusChart = null;
 
         this.CurrentDayWorkPromise = this.GetCurrentDayWork();
-        this.LoadAndSetStateGrafic();
+        this.RefreshCurrentDayAndTimeStatus();
+        //this.LoadAndSetStateGrafic();
     }
+    // #endregion
 
+    // #region TimeStatus
+    /**
+     * Stellt die Status dar, die an einem Arbeitstag vorkommen können
+     */
+    public TimeStatus = TimeStatus;
+    // #endregion
+
+    // #region CurrentDayWorkPromise
+    /**
+     * Die Zeiten vom aktuellen Tag
+     */
     public CurrentDayWorkPromise: Promise<DayDisplay>;
+    // #endregion
 
     // #region DayStatusChart
     /**
@@ -61,6 +122,17 @@ export class CurrentWorkComponent
     public DayStatusChart: SafeHtml | null;
     // #endregion
 
+    // #region TimeStatus
+    /**
+     * Der aktulle Status von der Zeitzählung
+     */
+    public CurrentStatus: TimeStatus;
+    // #endregion
+
+    // #region StartTransfer
+    /**
+     * Startet die Zeitzählung einer Fahrt zum Einsatzort hin/zurück
+     */
     public async StartTransfer(): Promise<void>
     {
         let currentDayWork = await this.CurrentDayWorkPromise;
@@ -75,10 +147,15 @@ export class CurrentWorkComponent
             }
         );
 
-        this.CurrentDayWorkPromise = this.GetCurrentDayWork();
-        this.LoadAndSetStateGrafic();
+        this.RefreshCurrentDayAndTimeStatus();
+        //this.LoadAndSetStateGrafic();
     }
+    // #endregion
 
+    // #region EndTransfer
+    /**
+     * Stoppt die Zeitzählung einer Fahr zum Einsatzort hin/zurück
+     */
     public async EndTransfer(): Promise<void>
     {
         let currentDayWork = await this.CurrentDayWorkPromise;
@@ -92,10 +169,15 @@ export class CurrentWorkComponent
             }
         );
 
-        this.CurrentDayWorkPromise = this.GetCurrentDayWork();
-        this.LoadAndSetStateGrafic();
+        this.RefreshCurrentDayAndTimeStatus();
+        //this.LoadAndSetStateGrafic();
     }
+    // #endregion
 
+    // #region StartWork
+    /**
+     * Startet die Zeitzählung am Einsatzort
+     */
     public async StartWork(): Promise<void>
     {
         let currentDayWork = await this.CurrentDayWorkPromise;
@@ -110,10 +192,15 @@ export class CurrentWorkComponent
             }
         );
 
-        this.CurrentDayWorkPromise = this.GetCurrentDayWork();
-        this.LoadAndSetStateGrafic();
+        this.RefreshCurrentDayAndTimeStatus();
+        //this.LoadAndSetStateGrafic();
     }
+    // #endregion
 
+    // #region EndTransfer
+    /**
+     * Endet die Zeitzählung am Einsatzort
+     */
     public async EndWork(): Promise<void>
     {
         let currentDayWork = await this.CurrentDayWorkPromise;
@@ -127,10 +214,49 @@ export class CurrentWorkComponent
             }
         );
 
-        this.CurrentDayWorkPromise = this.GetCurrentDayWork();
-        this.LoadAndSetStateGrafic();
+        this.RefreshCurrentDayAndTimeStatus();
+        //this.LoadAndSetStateGrafic();
     }
+    // #endregion
 
+    // #region RefreshCurrentDayAndTimeStatus
+    /**
+     * Ermittelt den aktuellen Arbeitstag aus der Datenbank erneut
+     * und füllt ahnhand dessen die Variable {@see CurrentStatus}
+     */
+    private async RefreshCurrentDayAndTimeStatus(): Promise<void>
+    {
+        this.CurrentDayWorkPromise = this.GetCurrentDayWork();
+        let currentDay = await this.CurrentDayWorkPromise;
+
+        if (currentDay.TransferTimeBeforeWork.Start == null)
+        {
+            this.CurrentStatus = TimeStatus.Initial;
+        }
+        else if (currentDay.WorkTime.Start == null)
+        {
+            this.CurrentStatus = TimeStatus.DrivingToWork
+        }
+        else if (currentDay.TransferTimeAfterWork.Start == null)
+        {
+            this.CurrentStatus = TimeStatus.AtWork;
+        }
+        else if (currentDay.TransferTimeAfterWork.End == null)
+        {
+            this.CurrentStatus = TimeStatus.DrivingHome;
+        }
+        else
+        {
+            this.CurrentStatus = TimeStatus.AfterWork;
+        }
+    }
+    // #endregion
+
+    // #region LoadAndSetStateGrafic
+    /**
+     * Lädt die Arbeitszeiten von diesem Monat, erstellt daraus ein SVG-Diagramm
+     * und weist das HTML vom SVG der Variable DayStatusChart zu.
+     */
     private async LoadAndSetStateGrafic(): Promise<void>
     {
         let currentTime = new Date();
@@ -156,6 +282,7 @@ export class CurrentWorkComponent
 
         this.DayStatusChart = this.sanitizer.bypassSecurityTrustHtml(StateDiagramm.Create(workDays).outerHTML);
     }
+    // #endregion
 
     // #region GetCurrentDayWork
     /**

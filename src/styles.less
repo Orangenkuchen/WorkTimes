@@ -1,3 +1,5 @@
+@import "./globalStyles.less";
+
 /* You can add global styles to this file, and also import other style files */
 
 html {
@@ -17,9 +19,24 @@ body {
     flex-direction: column;
 
     margin: 0;
+
+    color: var(--FontColor);
+    background-color: var(--BackgroundColor);
+
+    each(@BrightColorPallet, {
+        --@{key}: @value;
+    })
 }
 
 @font-face { 
     font-family: "Ubuntu";
     src: url("assets/fonts/ubuntu-light-webfont.woff2"); 
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        each(@DarkColorPallet, {
+            --@{key}: @value;
+        })
+    }
 }

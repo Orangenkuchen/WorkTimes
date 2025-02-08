@@ -2,6 +2,9 @@
 {
     display: flex;
     flex-direction: column;
+
+    margin: 10px;
+    background-color: var(--ContainerColor);
 }
 
 .Header {
@@ -17,6 +20,15 @@
         gap: 10px;
 
         text-align: center;
+
+        &.Active {
+            font-weight: bold;
+        }
+
+        &:not(.Active)
+        {
+            color: var(--FontColorDimm);
+        }
     }
 }
 
@@ -36,4 +48,14 @@
 
 .DayStatusChart {
     max-width: 800px;
+
+    ::ng-deep svg {
+        text {
+            fill: var(--FontColor);
+        }
+
+        .LegendLine {
+            stroke: var(--ContainerBorderColor);
+        }
+    }
 }
