@@ -1,7 +1,7 @@
 {
   "configVersion": 1,
-  "timestamp": 1739009778586,
-  "index": "./index.html",
+  "timestamp": 1739009832741,
+  "index": "./WorkTimes/index.html",
   "assetGroups": [
     {
       "name": "app",
@@ -11,12 +11,12 @@
         "ignoreVary": true
       },
       "urls": [
-        "./favicon.ico",
-        "./index.html",
-        "./main-JE2VMLIX.js",
-        "./manifest.webmanifest",
-        "./polyfills-FFHMD2TL.js",
-        "./styles-WVYZKDVS.css"
+        "./WorkTimes/favicon.ico",
+        "./WorkTimes/index.html",
+        "./WorkTimes/main-JE2VMLIX.js",
+        "./WorkTimes/manifest.webmanifest",
+        "./WorkTimes/polyfills-FFHMD2TL.js",
+        "./WorkTimes/styles-WVYZKDVS.css"
       ],
       "patterns": []
     },
@@ -28,26 +28,26 @@
         "ignoreVary": true
       },
       "urls": [
-        "./assets/fonts/ubuntu-light-webfont.woff2",
-        "./assets/icons/FavIcon.png",
-        "./assets/icons/FavIcon.svg",
-        "./media/ubuntu-light-webfont-2TRHHGVR.woff2"
+        "./WorkTimes/assets/fonts/ubuntu-light-webfont.woff2",
+        "./WorkTimes/assets/icons/FavIcon.png",
+        "./WorkTimes/assets/icons/FavIcon.svg",
+        "./WorkTimes/media/ubuntu-light-webfont-2TRHHGVR.woff2"
       ],
       "patterns": []
     }
   ],
   "dataGroups": [],
   "hashTable": {
-    "./assets/fonts/ubuntu-light-webfont.woff2": "09f6b2b4316749b1435f06317006878fc2396530",
-    "./assets/icons/FavIcon.png": "007cccf04825a7c36575e44893e38a070d04b67f",
-    "./assets/icons/FavIcon.svg": "3eba097d4b1274e08de39381513102a8a6f37f36",
-    "./favicon.ico": "9686238a20b1a621601311666d2341d18fbc7f22",
-    "./index.html": "2378e4646e46f30c3ea0766e473ef251c10782b0",
-    "./main-JE2VMLIX.js": "3185aaef2292b22abd771122fc16ef6f8c8e37bf",
-    "./manifest.webmanifest": "2781ed2403ab0261cec4fabc7b217b88aceeacfb",
-    "./media/ubuntu-light-webfont-2TRHHGVR.woff2": "09f6b2b4316749b1435f06317006878fc2396530",
-    "./polyfills-FFHMD2TL.js": "f49b49a155bc7d192db62a4c15d0a612b460a667",
-    "./styles-WVYZKDVS.css": "51be27b44afcaa0bacf37c0dbc84d9733e8d5b91"
+    "./WorkTimes/assets/fonts/ubuntu-light-webfont.woff2": "09f6b2b4316749b1435f06317006878fc2396530",
+    "./WorkTimes/assets/icons/FavIcon.png": "007cccf04825a7c36575e44893e38a070d04b67f",
+    "./WorkTimes/assets/icons/FavIcon.svg": "3eba097d4b1274e08de39381513102a8a6f37f36",
+    "./WorkTimes/favicon.ico": "9686238a20b1a621601311666d2341d18fbc7f22",
+    "./WorkTimes/index.html": "14e707b314f882d265e059b6d4896f09dac31976",
+    "./WorkTimes/main-JE2VMLIX.js": "3185aaef2292b22abd771122fc16ef6f8c8e37bf",
+    "./WorkTimes/manifest.webmanifest": "2781ed2403ab0261cec4fabc7b217b88aceeacfb",
+    "./WorkTimes/media/ubuntu-light-webfont-2TRHHGVR.woff2": "09f6b2b4316749b1435f06317006878fc2396530",
+    "./WorkTimes/polyfills-FFHMD2TL.js": "f49b49a155bc7d192db62a4c15d0a612b460a667",
+    "./WorkTimes/styles-WVYZKDVS.css": "51be27b44afcaa0bacf37c0dbc84d9733e8d5b91"
   },
   "navigationUrls": [
     {
