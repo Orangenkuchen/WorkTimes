@@ -1,0 +1,71 @@
+{
+  "configVersion": 1,
+  "timestamp": 1739009612584,
+  "index": "/WorkTimes/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/WorkTimes/favicon.ico",
+        "/WorkTimes/index.html",
+        "/WorkTimes/main-JE2VMLIX.js",
+        "/WorkTimes/manifest.webmanifest",
+        "/WorkTimes/polyfills-FFHMD2TL.js",
+        "/WorkTimes/styles-WVYZKDVS.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/WorkTimes/assets/fonts/ubuntu-light-webfont.woff2",
+        "/WorkTimes/assets/icons/FavIcon.png",
+        "/WorkTimes/assets/icons/FavIcon.svg",
+        "/WorkTimes/media/ubuntu-light-webfont-2TRHHGVR.woff2"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [],
+  "hashTable": {
+    "/WorkTimes/assets/fonts/ubuntu-light-webfont.woff2": "09f6b2b4316749b1435f06317006878fc2396530",
+    "/WorkTimes/assets/icons/FavIcon.png": "007cccf04825a7c36575e44893e38a070d04b67f",
+    "/WorkTimes/assets/icons/FavIcon.svg": "3eba097d4b1274e08de39381513102a8a6f37f36",
+    "/WorkTimes/favicon.ico": "9686238a20b1a621601311666d2341d18fbc7f22",
+    "/WorkTimes/index.html": "556d167fb55457cff86d91e8a341319dde6769e1",
+    "/WorkTimes/main-JE2VMLIX.js": "3185aaef2292b22abd771122fc16ef6f8c8e37bf",
+    "/WorkTimes/manifest.webmanifest": "2781ed2403ab0261cec4fabc7b217b88aceeacfb",
+    "/WorkTimes/media/ubuntu-light-webfont-2TRHHGVR.woff2": "09f6b2b4316749b1435f06317006878fc2396530",
+    "/WorkTimes/polyfills-FFHMD2TL.js": "f49b49a155bc7d192db62a4c15d0a612b460a667",
+    "/WorkTimes/styles-WVYZKDVS.css": "51be27b44afcaa0bacf37c0dbc84d9733e8d5b91"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    }
+  ],
+  "navigationRequestStrategy": "performance"
+}
