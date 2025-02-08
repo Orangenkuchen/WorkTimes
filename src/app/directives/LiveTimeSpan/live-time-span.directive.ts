@@ -116,6 +116,39 @@ export class LiveTimeSpanDirective implements OnDestroy, OnChanges
     }
     // #endregion
 
+    // #region static SplitMillisecondsIntoParts
+    /**
+     * Splittet die angegeben Millisekunden in größere Einheiten
+     * 
+     * @param milliseconds Die Millisekunden, die gesplittet werden sollen
+     * @returns Gibt die größerden Einheiten zurück
+     */
+    public static SplitMillisecondsIntoParts(milliseconds: number): TimeFragments
+    {
+        let result: TimeFragments = {
+            Hours: 0,
+            Minutes: 0,
+            Seconds: 0,
+            Milliseconds: 0
+        };
+
+        let remainingMilliseconds = milliseconds;
+
+        result.Hours = Math.floor(remainingMilliseconds / MillisecondsInHour);
+        remainingMilliseconds -= result.Hours * MillisecondsInHour;
+
+        result.Minutes = Math.floor(remainingMilliseconds / MillisecondsInMinute);
+        remainingMilliseconds -= result.Minutes * MillisecondsInMinute;
+
+        result.Seconds = Math.floor(remainingMilliseconds / MillisecondsInSecond);
+        remainingMilliseconds -= result.Seconds * MillisecondsInSecond;
+
+        result.Milliseconds = remainingMilliseconds;
+
+        return result;
+    }
+    // #endregion
+
     // #region ReinitializeDisplay
     /**
      * Initialisiert die Anzeige erneut
@@ -156,45 +189,12 @@ export class LiveTimeSpanDirective implements OnDestroy, OnChanges
 
             let timeDifference = endTime.getTime() - this.startTime.getTime();
 
-            let timeFragments = this.SplitMillisecondsIntoParts(timeDifference);
+            let timeFragments = LiveTimeSpanDirective.SplitMillisecondsIntoParts(timeDifference);
 
             let result = `${timeFragments.Hours}:${timeFragments.Minutes.toString().padStart(2, "0")}:${timeFragments.Seconds.toString().padStart(2, "0")}`;
 
             (<HTMLElement>this.elementRef.nativeElement).innerText = result;
         }
-    }
-    // #endregion
-
-    // #region SplitMillisecondsIntoParts
-    /**
-     * Splittet die angegeben Millisekunden in größere Einheiten
-     * 
-     * @param milliseconds Die Millisekunden, die gesplittet werden sollen
-     * @returns Gibt die größerden Einheiten zurück
-     */
-    private SplitMillisecondsIntoParts(milliseconds: number): TimeFragments
-    {
-        let result: TimeFragments = {
-            Hours: 0,
-            Minutes: 0,
-            Seconds: 0,
-            Milliseconds: 0
-        };
-
-        let remainingMilliseconds = milliseconds;
-
-        result.Hours = Math.floor(remainingMilliseconds / MillisecondsInHour);
-        remainingMilliseconds -= result.Hours * MillisecondsInHour;
-
-        result.Minutes = Math.floor(remainingMilliseconds / MillisecondsInMinute);
-        remainingMilliseconds -= result.Minutes * MillisecondsInMinute;
-
-        result.Seconds = Math.floor(remainingMilliseconds / MillisecondsInSecond);
-        remainingMilliseconds -= result.Seconds * MillisecondsInSecond;
-
-        result.Milliseconds = remainingMilliseconds;
-
-        return result;
     }
     // #endregion
 }

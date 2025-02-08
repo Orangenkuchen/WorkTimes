@@ -1,1 +1,50 @@
-<p>history works!</p>
+<div class="Header">
+    <p>Header</p>
+</div>
+<table mat-table [dataSource]="this.DataSource" matSort>
+
+  <!-- Date Column -->
+  <ng-container matColumnDef="Date">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Datum</th>
+    <td mat-cell *matCellDef="let element">{{element.Date | date}}</td>
+  </ng-container>
+
+  <!-- StartToWork Column -->
+  <ng-container matColumnDef="StartToWork">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Start Fahrzeit</th>
+    <td mat-cell *matCellDef="let element">{{element.StartToWork}}</td>
+  </ng-container>
+
+  <!-- StartWork Column -->
+  <ng-container matColumnDef="StartWork">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Start Arbeitszeit</th>
+    <td mat-cell *matCellDef="let element">{{element.StartWork}}</td>
+  </ng-container>
+
+  <!-- StartToHome Column -->
+  <ng-container matColumnDef="StartToHome">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Start Fahrzeit</th>
+    <td mat-cell *matCellDef="let element">{{element.StartToHome}}</td>
+  </ng-container>
+
+  <!-- EndToHome Column -->
+  <ng-container matColumnDef="EndToHome">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Ende Fahrzeit</th>
+    <td mat-cell *matCellDef="let element">{{element.EndToHome}}</td>
+  </ng-container>
+
+  <!-- WorkTime Column -->
+  <ng-container matColumnDef="WorkTime">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Arbeitszeit</th>
+    <td mat-cell *matCellDef="let element">{{element.WorkTime}}</td>
+  </ng-container>
+
+  <!-- DriveTime Column -->
+  <ng-container matColumnDef="DriveTime">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Fahrzeit</th>
+    <td mat-cell *matCellDef="let element">{{element.DriveTime}}</td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="this.DisplayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: this.DisplayedColumns;"></tr>
+</table>
