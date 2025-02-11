@@ -1,10 +1,8 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { WorkDay } from '../../entities/WorkDay';
 import { DatePipe } from '@angular/common';
 import { TimeRepositoryService } from '../../services/time-repository/time-repository.service';
-import { setThrowInvalidWriteToSignalError } from '@angular/core/primitives/signals';
 import { TimeSliceType } from '../../entities/TimeSliceType';
 import { LiveTimeSpanDirective } from '../../directives/LiveTimeSpan/live-time-span.directive';
 
@@ -58,7 +56,8 @@ export class HistoryComponent implements AfterViewInit
             "StartToHome",
             "EndToHome",
             "WorkTime",
-            "DriveTime"
+            "DriveTime",
+            "Remove"
         );
 
         this.FillDataSource();
@@ -96,6 +95,23 @@ export class HistoryComponent implements AfterViewInit
     public DataSource: MatTableDataSource<HistoryDay>;
     // #endregion
 
+    // #region DeleteWorkDayEntry
+    /**
+     * Löscht den Arbeitstag mit dem angegeben Datum
+     * 
+     * @param date Das Datum vom Arbeitstag, der gelöscht werden soll
+     */
+    public async DeleteWorkDayEntry(date: Date): Promise<void>
+    {
+        if (confirm(`Element löschen (${date.getDate()}.${date.getMonth()}.${date.getFullYear()})?`))
+        {
+            await this.timeRepositoryService.DeleteWorkDay(date);
+
+            this.FillDataSource();
+        }
+    }
+    // #endregion
+
     // #region FillDataSource
     /**
      * Füllt die DatenQuelle von der Tabelle mit den letzten Zeiten
@@ -108,13 +124,13 @@ export class HistoryComponent implements AfterViewInit
 
         for (let workDay of workDays)
         {
-            let transfers = workDays[0].TimeSlots.filter(
+            let transfers = workDay.TimeSlots.filter(
                 (x) => 
                 {
                     return x.Type == TimeSliceType.Transfer;
                 }
             );
-            let workTimes = workDays[0].TimeSlots.filter(
+            let workTimes = workDay.TimeSlots.filter(
                 (x) =>
                 {
                     return x.Type == TimeSliceType.Work;

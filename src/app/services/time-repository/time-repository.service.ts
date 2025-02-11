@@ -145,20 +145,18 @@ export class TimeRepositoryService
     {
         let database = await this.databasePromise;
 
-        let workTimesObjectStore = database.transaction("WorkTimes", "readonly").objectStore("WorkTimes");
-        let entry = workTimesObjectStore.index("Date").get(date).result;
+        let workTimesObjectStore = database.transaction("WorkTimes", "readwrite").objectStore("WorkTimes");
+        let deleteRequest = workTimesObjectStore.delete(date.getTime());
 
         await new Promise<void>(
             (success, reject) =>
             {
-                let request = workTimesObjectStore.delete(entry.id);
-
-                request.onsuccess = () =>
+                deleteRequest.onsuccess = () =>
                 {
                     success();
                 };
 
-                request.onerror = (event) =>
+                deleteRequest.onerror = (event) =>
                 {
                     reject((<any>event?.target)?.error);
                 };
