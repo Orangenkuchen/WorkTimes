@@ -4,8 +4,8 @@
   "theme_color": "#1d7000",
   "background_color": "#fafafa",
   "display": "standalone",
-  "scope": "./WorkTimes",
-  "start_url": "./WorkTimes",
+  "scope": "/WorkTimes",
+  "start_url": "/WorkTimes",
   "icons": [
     {
       "src": "assets/icons/FavIcon.svg",
