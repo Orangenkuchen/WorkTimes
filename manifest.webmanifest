@@ -4,7 +4,7 @@
   "theme_color": "#1d7000",
   "background_color": "#fafafa",
   "display": "standalone",
-  "scope": "/",
+  "scope": "./WorkTimes",
   "start_url": "./WorkTimes",
   "icons": [
     {
