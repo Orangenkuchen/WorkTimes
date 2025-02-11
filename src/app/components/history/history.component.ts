@@ -103,7 +103,9 @@ export class HistoryComponent implements AfterViewInit
      */
     public async DeleteWorkDayEntry(date: Date): Promise<void>
     {
-        if (confirm(`Element löschen (${date.getDate()}.${date.getMonth()}.${date.getFullYear()})?`))
+        let dateString = `${date.getDate().toString().padStart(2, "0")}.${(date.getMonth() + 1).toString().padStart(2, "0")}.${date.getFullYear()}`;
+
+        if (confirm(`Element löschen (${dateString})?`))
         {
             await this.timeRepositoryService.DeleteWorkDay(date);
 
