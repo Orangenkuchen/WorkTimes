@@ -1,7 +1,7 @@
 {
   "configVersion": 1,
-  "timestamp": 1739292622031,
-  "index": "./index.html",
+  "timestamp": 1739292759973,
+  "index": "/index.html",
   "assetGroups": [
     {
       "name": "app",
@@ -11,14 +11,14 @@
         "ignoreVary": true
       },
       "urls": [
-        "./chunk-DPWECC3Y.js",
-        "./chunk-HUJENCTP.js",
-        "./favicon.ico",
-        "./index.html",
-        "./main-TJC67RYL.js",
-        "./manifest.webmanifest",
-        "./polyfills-Q763KACN.js",
-        "./styles-WLYXO4IY.css"
+        "/chunk-DPWECC3Y.js",
+        "/chunk-HUJENCTP.js",
+        "/favicon.ico",
+        "/index.html",
+        "/main-TJC67RYL.js",
+        "/manifest.webmanifest",
+        "/polyfills-Q763KACN.js",
+        "/styles-WLYXO4IY.css"
       ],
       "patterns": []
     },
@@ -30,28 +30,28 @@
         "ignoreVary": true
       },
       "urls": [
-        "./assets/fonts/ubuntu-light-webfont.woff2",
-        "./assets/icons/FavIcon.png",
-        "./assets/icons/FavIcon.svg",
-        "./media/ubuntu-light-webfont-2TRHHGVR.woff2"
+        "/assets/fonts/ubuntu-light-webfont.woff2",
+        "/assets/icons/FavIcon.png",
+        "/assets/icons/FavIcon.svg",
+        "/media/ubuntu-light-webfont-2TRHHGVR.woff2"
       ],
       "patterns": []
     }
   ],
   "dataGroups": [],
   "hashTable": {
-    "./assets/fonts/ubuntu-light-webfont.woff2": "09f6b2b4316749b1435f06317006878fc2396530",
-    "./assets/icons/FavIcon.png": "007cccf04825a7c36575e44893e38a070d04b67f",
-    "./assets/icons/FavIcon.svg": "3eba097d4b1274e08de39381513102a8a6f37f36",
-    "./chunk-DPWECC3Y.js": "e186f8c88b7928d693f221b0def1155ce62daa46",
-    "./chunk-HUJENCTP.js": "ab213c094ec34f68d503f7dda2368f7c409f3de6",
-    "./favicon.ico": "9686238a20b1a621601311666d2341d18fbc7f22",
-    "./index.html": "63f8e6decb49ceb680b91f4246c11d99d280a0c3",
-    "./main-TJC67RYL.js": "6e8732db6320578efd9c53d7a0951653e9af68ef",
-    "./manifest.webmanifest": "757e50ccef685dce20e9dc7f389435579d214c2f",
-    "./media/ubuntu-light-webfont-2TRHHGVR.woff2": "09f6b2b4316749b1435f06317006878fc2396530",
-    "./polyfills-Q763KACN.js": "e2a9f135443e4bc6115449a6098604d881bf5931",
-    "./styles-WLYXO4IY.css": "e0e6e870ad01e32f228dac419553bc97b7121db5"
+    "/assets/fonts/ubuntu-light-webfont.woff2": "09f6b2b4316749b1435f06317006878fc2396530",
+    "/assets/icons/FavIcon.png": "007cccf04825a7c36575e44893e38a070d04b67f",
+    "/assets/icons/FavIcon.svg": "3eba097d4b1274e08de39381513102a8a6f37f36",
+    "/chunk-DPWECC3Y.js": "e186f8c88b7928d693f221b0def1155ce62daa46",
+    "/chunk-HUJENCTP.js": "ab213c094ec34f68d503f7dda2368f7c409f3de6",
+    "/favicon.ico": "9686238a20b1a621601311666d2341d18fbc7f22",
+    "/index.html": "1efd55b7b14b19595bc61d6bdde708a7ca60962c",
+    "/main-TJC67RYL.js": "6e8732db6320578efd9c53d7a0951653e9af68ef",
+    "/manifest.webmanifest": "757e50ccef685dce20e9dc7f389435579d214c2f",
+    "/media/ubuntu-light-webfont-2TRHHGVR.woff2": "09f6b2b4316749b1435f06317006878fc2396530",
+    "/polyfills-Q763KACN.js": "e2a9f135443e4bc6115449a6098604d881bf5931",
+    "/styles-WLYXO4IY.css": "e0e6e870ad01e32f228dac419553bc97b7121db5"
   },
   "navigationUrls": [
     {
