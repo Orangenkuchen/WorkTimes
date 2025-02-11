@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1739284218608,
+  "timestamp": 1739284640996,
   "index": "./WorkTimes/index.html",
   "assetGroups": [
     {
@@ -15,7 +15,7 @@
         "./WorkTimes/chunk-HUJENCTP.js",
         "./WorkTimes/favicon.ico",
         "./WorkTimes/index.html",
-        "./WorkTimes/main-GBKMKQIV.js",
+        "./WorkTimes/main-TJC67RYL.js",
         "./WorkTimes/manifest.webmanifest",
         "./WorkTimes/polyfills-Q763KACN.js",
         "./WorkTimes/styles-WLYXO4IY.css"
@@ -46,8 +46,8 @@
     "./WorkTimes/chunk-DPWECC3Y.js": "e186f8c88b7928d693f221b0def1155ce62daa46",
     "./WorkTimes/chunk-HUJENCTP.js": "ab213c094ec34f68d503f7dda2368f7c409f3de6",
     "./WorkTimes/favicon.ico": "9686238a20b1a621601311666d2341d18fbc7f22",
-    "./WorkTimes/index.html": "f092a8aecc5f407b01ae2e1b25a1a51d6c90bfe2",
-    "./WorkTimes/main-GBKMKQIV.js": "0b26bb8eb02fd4531266f5ebcad45a1c50d5d777",
+    "./WorkTimes/index.html": "207386cf44ac1fc6a0629578aac28495fdff994b",
+    "./WorkTimes/main-TJC67RYL.js": "6e8732db6320578efd9c53d7a0951653e9af68ef",
     "./WorkTimes/manifest.webmanifest": "44f693dfeb1fa733c43530976b1b93c2c02d85ad",
     "./WorkTimes/media/ubuntu-light-webfont-2TRHHGVR.woff2": "09f6b2b4316749b1435f06317006878fc2396530",
     "./WorkTimes/polyfills-Q763KACN.js": "e2a9f135443e4bc6115449a6098604d881bf5931",
