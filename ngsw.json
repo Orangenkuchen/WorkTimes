@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1739293265131,
+  "timestamp": 1739293661759,
   "index": "./WorkTimes/index.html",
   "assetGroups": [
     {
@@ -48,7 +48,7 @@
     "./WorkTimes/favicon.ico": "9686238a20b1a621601311666d2341d18fbc7f22",
     "./WorkTimes/index.html": "207386cf44ac1fc6a0629578aac28495fdff994b",
     "./WorkTimes/main-TJC67RYL.js": "6e8732db6320578efd9c53d7a0951653e9af68ef",
-    "./WorkTimes/manifest.webmanifest": "757e50ccef685dce20e9dc7f389435579d214c2f",
+    "./WorkTimes/manifest.webmanifest": "21a48aa2161c22d0acc8649ff92d8e3107f10a69",
     "./WorkTimes/media/ubuntu-light-webfont-2TRHHGVR.woff2": "09f6b2b4316749b1435f06317006878fc2396530",
     "./WorkTimes/polyfills-Q763KACN.js": "e2a9f135443e4bc6115449a6098604d881bf5931",
     "./WorkTimes/styles-WLYXO4IY.css": "e0e6e870ad01e32f228dac419553bc97b7121db5"
