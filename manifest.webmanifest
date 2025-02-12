@@ -2,6 +2,7 @@
   "name": "WorkTimes",
   "short_name": "WorkTimes",
   "default_locale": "de-DE",
+  "orientation": "any",
   "theme_color": "#1d7000",
   "background_color": "#fafafa",
   "display": "standalone",
