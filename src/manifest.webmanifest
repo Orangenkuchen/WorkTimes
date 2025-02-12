@@ -1,16 +1,44 @@
 {
   "name": "WorkTimes",
   "short_name": "WorkTimes",
+  "default_locale": "de-DE",
+  "orientation": "any",
   "theme_color": "#1d7000",
   "background_color": "#fafafa",
+  "display_override": ["fullscreen", "minimal-ui"],
   "display": "standalone",
-  "scope": "./",
-  "start_url": "./",
+  "scope": "/WorkTimes",
+  "start_url": "/WorkTimes",
   "icons": [
     {
       "src": "assets/icons/FavIcon.svg",
       "type": "image/svg",
-      "purpose": "maskable any"
+      "size": "96x96",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/FavIcon.svg",
+      "type": "image/svg",
+      "size": "144x144",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/FavIcon.svg",
+      "type": "image/svg",
+      "size": "192x192",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/FavIcon.svg",
+      "type": "image/svg",
+      "size": "256x256",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/FavIcon.svg",
+      "type": "image/svg",
+      "size": "512x512",
+      "purpose": "any"
     }
   ]
 }
