@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/components/history/root/Projects/WorkTimes/src/app/components/history/history.component.less"],
-  "sourcesContent": [":host\n{\n    display: flex;\n    flex-direction: column;\n\n    margin: 10px;\n    padding: 10px;\n\n    background-color: var(--ContainerColor);\n\n    border-style: solid;\n    border-width: 1px;\n    border-color: var(--ContainerBorderColor);\n\n    overflow: auto;\n}"],
-  "mappings": "AAAA,MAEI,QAAA,KACA,eAAA,OAHJ,OAKI,KALJ,QAMI,KAEA,iBAAkB,IAAA,kBAElB,aAAA,MACA,aAAA,IACA,aAAc,IAAA,wBAEd,SAAA",
-  "names": []
-}
