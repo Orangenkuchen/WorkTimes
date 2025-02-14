@@ -53,11 +53,11 @@ export class ExportHelper
             stringBuilder.push(separater);
 
             let workTimeSplit = LiveTimeSpanDirective.SplitMillisecondsIntoParts(workDay.WorkTimeMs);
-            stringBuilder.push(`${workTimeSplit.Hours.toString().padStart(2, "0")}:${workTimeSplit.Minutes.toString().padEnd(2, "0")}`);
+            stringBuilder.push(`${workTimeSplit.Hours.toString().padStart(2, "0")}:${workTimeSplit.Minutes.toString().padStart(2, "0")}`);
             stringBuilder.push(separater);
 
             let transferTimeSplit = LiveTimeSpanDirective.SplitMillisecondsIntoParts(workDay.DriveTimeMs);
-            stringBuilder.push(`${transferTimeSplit.Hours.toString().padStart(2, "0")}:${transferTimeSplit.Minutes.toString().padEnd(2, "0")}`);
+            stringBuilder.push(`${transferTimeSplit.Hours.toString().padStart(2, "0")}:${transferTimeSplit.Minutes.toString().padStart(2, "0")}`);
 
             stringBuilder.push("\n");
         }
