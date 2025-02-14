@@ -5,6 +5,9 @@ import { DatePipe } from '@angular/common';
 import { TimeRepositoryService } from '../../services/time-repository/time-repository.service';
 import { WorkDayOverview } from '../../entities/HistoryDay';
 import { TimeSpanPipe } from '../../Pipes/time-span.pipe';
+import { ExportHelper } from '../../Helper/ExportHelper';
+import { DownloadHelper } from '../../Helper/DownloadHelper';
+import { DateHelper } from '../../Helper/DateHelper';
 
 @Component({
     selector: 'app-history',
@@ -93,6 +96,37 @@ export class HistoryComponent implements AfterViewInit
 
             this.FillDataSource();
         }
+    }
+    // #endregion
+
+    // #region ExportAsCsv
+    /**
+     * Exportiert die angezeigten Arbeitstage als CSV-Datei (und startet den Download)
+     */
+    public async ExportAsCsv(): Promise<void>
+    {
+        let csvBlob = ExportHelper.WorkDayToCsv(this.DataSource.data);
+
+        let oldestWorkDate: Date | null = null;
+        let latestWorkDate: Date | null = null;
+
+        for (let workDay of this.DataSource.data)
+        {
+            if (oldestWorkDate == null || workDay.Date < <Date>oldestWorkDate)
+            {
+                oldestWorkDate = workDay.Date;
+            }
+
+            if (latestWorkDate == null || workDay.Date > <Date>latestWorkDate)
+            {
+                latestWorkDate = workDay.Date;
+            }
+        }
+
+        await DownloadHelper.DownloadFileBlob(
+            csvBlob,
+            `Arbeitszeiten_${DateHelper.FormatDate(oldestWorkDate, "yyyy_MM_dd")}-${DateHelper.FormatDate(latestWorkDate, "yyyy_MM_dd")}.csv`
+        );
     }
     // #endregion
 

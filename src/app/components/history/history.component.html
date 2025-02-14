@@ -1,5 +1,6 @@
 <div class="Header">
-    <p>Letzen Arbeitszeiten</p>
+    <p class="Text">Letzen Arbeitszeiten</p>
+    <button (click)="this.ExportAsCsv()">Export</button>
 </div>
 <table mat-table [dataSource]="this.DataSource" matSort>
 
