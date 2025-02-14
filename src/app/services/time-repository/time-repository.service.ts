@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { WorkDay } from '../../entities/WorkDay';
+import { WorkDayOverview } from '../../entities/HistoryDay';
+import { TimeSliceType } from '../../entities/TimeSliceType';
 
 /**
  * Repository für Arbeitszeiten
@@ -49,6 +51,77 @@ export class TimeRepositoryService
                 
             }
         );
+    }
+    // #endregion
+
+    // #region static ConvertWorkDayToHistoryDay
+    /**
+     * Wandelt einen {@see WorkDay} in einen {@see WorkDayOverview} um
+     * 
+     * @param workDay Der WorkDay, der umgewandelt werden soll
+     * @returns Gibt den WorkDayOverview zurück
+     */
+    public static ConvertWorkDayToHistoryDay(workDay: WorkDay): WorkDayOverview
+    {
+        let transfers = workDay.TimeSlots.filter(
+            (x) => 
+            {
+                return x.Type == TimeSliceType.Transfer;
+            }
+        );
+        let workTimes = workDay.TimeSlots.filter(
+            (x) =>
+            {
+                return x.Type == TimeSliceType.Work;
+            }
+        );
+
+        let workDayOverview = <WorkDayOverview> {
+            Date: workDay.Date,
+            StartToWork: null,
+            EndToWork: null,
+            StartWork: null,
+            EndWork: null,
+            StartToHome: null,
+            EndToHome: null,
+            WorkTimeMs: 0,
+            DriveTimeMs: 0
+        };
+
+        if (transfers.length >= 1)
+        {
+            workDayOverview.StartToWork = transfers[0].Start;
+            workDayOverview.EndToWork = transfers[0].End;
+
+            if (transfers[0].Start != null && transfers[0].End != null)
+            {
+                workDayOverview.DriveTimeMs += transfers[0].End.getTime() - transfers[0].Start.getTime();
+            }
+        }
+
+        if (workTimes.length >= 1)
+        {
+            workDayOverview.StartWork = workTimes[0].Start;
+            workDayOverview.EndWork = workTimes[0].End;
+
+            if (workTimes[0].Start != null && workTimes[0].End != null)
+            {
+                workDayOverview.WorkTimeMs += workTimes[0].End.getTime() - workTimes[0].Start.getTime();
+            }
+        }
+
+        if (transfers.length >= 2)
+        {
+            workDayOverview.StartToHome = transfers[1].Start;
+            workDayOverview.EndToHome = transfers[1].End;
+
+            if (transfers[1].Start != null && transfers[1].End != null)
+            {
+                workDayOverview.DriveTimeMs += transfers[1].End.getTime() - transfers[1].Start.getTime();
+            }
+        }
+
+        return workDayOverview;
     }
     // #endregion
 
