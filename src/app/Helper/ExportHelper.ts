@@ -37,7 +37,7 @@ export class ExportHelper
             stringBuilder.push(DateHelper.FormatDate(workDay.Date, "dd.MM.yyyy"));
             stringBuilder.push(separater);
 
-            stringBuilder.push(DateHelper.FormatDate(workDay.StartToHome, "HH:mm"));
+            stringBuilder.push(DateHelper.FormatDate(workDay.StartToWork, "HH:mm"));
             stringBuilder.push(" - ");
             stringBuilder.push(DateHelper.FormatDate(workDay.EndToWork, "HH:mm"));
             stringBuilder.push(separater);
