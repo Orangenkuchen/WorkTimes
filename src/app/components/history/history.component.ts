@@ -3,30 +3,16 @@ import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { DatePipe } from '@angular/common';
 import { TimeRepositoryService } from '../../services/time-repository/time-repository.service';
-import { TimeSliceType } from '../../entities/TimeSliceType';
-import { LiveTimeSpanDirective } from '../../directives/LiveTimeSpan/live-time-span.directive';
-
-interface HistoryDay
-{
-    Date: Date;
-
-    StartToWork: string;
-
-    StartWork: string;
-
-    StartToHome: string;
-
-    EndToHome: string;
-
-    WorkTime: string;
-
-    DriveTime: string;
-}
+import { WorkDayOverview } from '../../entities/HistoryDay';
+import { TimeSpanPipe } from '../../Pipes/time-span.pipe';
+import { ExportHelper } from '../../Helper/ExportHelper';
+import { DownloadHelper } from '../../Helper/DownloadHelper';
+import { DateHelper } from '../../Helper/DateHelper';
 
 @Component({
     selector: 'app-history',
     standalone: true,
-    imports: [MatTableModule, MatSortModule, DatePipe],
+    imports: [MatTableModule, MatSortModule, DatePipe, TimeSpanPipe],
     templateUrl: './history.component.html',
     styleUrl: './history.component.less'
 })
@@ -47,14 +33,13 @@ export class HistoryComponent implements AfterViewInit
     {
         this.timeRepositoryService = timeRepositoryService;
 
-        this.DataSource = new MatTableDataSource<HistoryDay>();
+        this.DataSource = new MatTableDataSource<WorkDayOverview>();
 
         this.DisplayedColumns = new Array<string>(
             "Date",
-            "StartToWork",
-            "StartWork",
-            "StartToHome",
-            "EndToHome",
+            "ToWork",
+            "Work",
+            "ToHome",
             "WorkTime",
             "DriveTime",
             "Remove"
@@ -92,7 +77,7 @@ export class HistoryComponent implements AfterViewInit
     /**
      * Die Datenquelle von der Tabelle
      */
-    public DataSource: MatTableDataSource<HistoryDay>;
+    public DataSource: MatTableDataSource<WorkDayOverview>;
     // #endregion
 
     // #region DeleteWorkDayEntry
@@ -114,6 +99,37 @@ export class HistoryComponent implements AfterViewInit
     }
     // #endregion
 
+    // #region ExportAsCsv
+    /**
+     * Exportiert die angezeigten Arbeitstage als CSV-Datei (und startet den Download)
+     */
+    public async ExportAsCsv(): Promise<void>
+    {
+        let csvBlob = ExportHelper.WorkDayToCsv(this.DataSource.data);
+
+        let oldestWorkDate: Date | null = null;
+        let latestWorkDate: Date | null = null;
+
+        for (let workDay of this.DataSource.data)
+        {
+            if (oldestWorkDate == null || workDay.Date < <Date>oldestWorkDate)
+            {
+                oldestWorkDate = workDay.Date;
+            }
+
+            if (latestWorkDate == null || workDay.Date > <Date>latestWorkDate)
+            {
+                latestWorkDate = workDay.Date;
+            }
+        }
+
+        await DownloadHelper.DownloadFileBlob(
+            csvBlob,
+            `Arbeitszeiten_${DateHelper.FormatDate(oldestWorkDate, "yyyy_MM_dd")}-${DateHelper.FormatDate(latestWorkDate, "yyyy_MM_dd")}.csv`
+        );
+    }
+    // #endregion
+
     // #region FillDataSource
     /**
      * Füllt die DatenQuelle von der Tabelle mit den letzten Zeiten
@@ -122,87 +138,11 @@ export class HistoryComponent implements AfterViewInit
     {
         let workDays = await this.timeRepositoryService.GetWorkDays(new Date(2000, 1, 1), new Date());
 
-        let historyDays = new Array<HistoryDay>();
+        let historyDays = new Array<WorkDayOverview>();
 
         for (let workDay of workDays)
         {
-            let transfers = workDay.TimeSlots.filter(
-                (x) => 
-                {
-                    return x.Type == TimeSliceType.Transfer;
-                }
-            );
-            let workTimes = workDay.TimeSlots.filter(
-                (x) =>
-                {
-                    return x.Type == TimeSliceType.Work;
-                }
-            );
-
-            let historyDay = <HistoryDay> {
-                Date: workDay.Date,
-                StartToWork: "",
-                StartWork: "",
-                StartToHome: "",
-                EndToHome: "",
-                WorkTime: "",
-                DriveTime: ""
-            };
-
-            let transferMilliseconds = 0;
-            let workMilliseconds = 0;
-
-            if (transfers.length >= 1)
-            {
-                if (transfers[0].Start != null)
-                {
-                    historyDay.StartToWork = `${transfers[0].Start.getHours().toString().padStart(2, "0")}:${transfers[0].Start.getMinutes().toString().padStart(2, "0")}`;
-                }
-
-                if (transfers[0].Start != null && transfers[0].End != null)
-                {
-                    transferMilliseconds += transfers[0].End.getTime() - transfers[0].Start.getTime();
-                }
-            }
-
-            if (workTimes.length >= 1)
-            {
-                if (workTimes[0].Start != null)
-                {
-                    historyDay.StartWork = `${workTimes[0].Start.getHours().toString().padStart(2, "0")}:${workTimes[0].Start.getMinutes().toString().padStart(2, "0")}`;
-                }
-
-                if (workTimes[0].Start != null && workTimes[0].End != null)
-                {
-                    workMilliseconds += workTimes[0].End.getTime() - workTimes[0].Start.getTime();
-                }
-            }
-
-            if (transfers.length >= 2)
-            {
-                if (transfers[1].Start != null)
-                {
-                    historyDay.StartToHome = `${transfers[1].Start.getHours().toString().padStart(2, "0")}:${transfers[1].Start.getMinutes().toString().padStart(2, "0")}`;
-                }
-
-                if (transfers[1].End != null)
-                {
-                    historyDay.EndToHome = `${transfers[1].End.getHours().toString().padStart(2, "0")}:${transfers[1].End.getMinutes().toString().padStart(2, "0")}`;
-                }
-
-                if (transfers[1].Start != null && transfers[1].End != null)
-                {
-                    transferMilliseconds += transfers[1].End.getTime() - transfers[1].Start.getTime();
-                }
-            }
-
-            let transferTimeFragments = LiveTimeSpanDirective.SplitMillisecondsIntoParts(transferMilliseconds);
-            let workTimeFragments = LiveTimeSpanDirective.SplitMillisecondsIntoParts(workMilliseconds);
-
-            historyDay.DriveTime = `${transferTimeFragments.Hours.toString().padStart(2, "0")}:${transferTimeFragments.Minutes.toString().padStart(2, "0")}`;
-            historyDay.WorkTime = `${workTimeFragments.Hours.toString().padStart(2, "0")}:${workTimeFragments.Minutes.toString().padStart(2, "0")}`;
-
-            historyDays.push(historyDay);
+            historyDays.push(TimeRepositoryService.ConvertWorkDayToHistoryDay(workDay));
         }
 
         this.DataSource.data = historyDays;

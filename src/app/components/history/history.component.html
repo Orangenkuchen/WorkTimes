@@ -1,56 +1,51 @@
 <div class="Header">
-    <p>Header</p>
+    <p class="Text">Letzen Arbeitszeiten</p>
+    <button (click)="this.ExportAsCsv()">Export</button>
 </div>
 <table mat-table [dataSource]="this.DataSource" matSort>
 
-  <!-- Date Column -->
-  <ng-container matColumnDef="Date">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Datum</th>
-    <td mat-cell *matCellDef="let element">{{element.Date | date}}</td>
-  </ng-container>
+    <!-- Date Column -->
+    <ng-container matColumnDef="Date">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Datum</th>
+        <td mat-cell *matCellDef="let element">{{element.Date | date:"dd.MM&nbsp;.yyyy"}}</td>
+    </ng-container>
 
-  <!-- StartToWork Column -->
-  <ng-container matColumnDef="StartToWork">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Start Fahrzeit</th>
-    <td mat-cell *matCellDef="let element">{{element.StartToWork}}</td>
-  </ng-container>
+    <!-- ToWork Column -->
+    <ng-container matColumnDef="ToWork">
+        <th mat-header-cell *matHeaderCellDef>Fahrtweg</th>
+        <td mat-cell *matCellDef="let element">{{element.StartToWork | date:"HH:mm"}} - {{element.EndToWork | date:"HH:mm"}}</td>
+    </ng-container>
 
-  <!-- StartWork Column -->
-  <ng-container matColumnDef="StartWork">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Start Arbeitszeit</th>
-    <td mat-cell *matCellDef="let element">{{element.StartWork}}</td>
-  </ng-container>
+    <!-- Work Column -->
+    <ng-container matColumnDef="Work">
+        <th mat-header-cell *matHeaderCellDef>Arbeit</th>
+        <td mat-cell *matCellDef="let element">{{element.StartWork | date:"HH:mm"}} - {{element.EndWork | date:"HH:mm"}}</td>
+    </ng-container>
 
-  <!-- StartToHome Column -->
-  <ng-container matColumnDef="StartToHome">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Start Fahrzeit</th>
-    <td mat-cell *matCellDef="let element">{{element.StartToHome}}</td>
-  </ng-container>
+    <!-- ToHome Column -->
+    <ng-container matColumnDef="ToHome">
+        <th mat-header-cell *matHeaderCellDef>Fahrzeit</th>
+        <td mat-cell *matCellDef="let element">{{element.StartToHome | date:"HH:mm"}} - {{element.EndToHome | date:"HH:mm"}}</td>
+    </ng-container>
 
-  <!-- EndToHome Column -->
-  <ng-container matColumnDef="EndToHome">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Ende Fahrzeit</th>
-    <td mat-cell *matCellDef="let element">{{element.EndToHome}}</td>
-  </ng-container>
+    <!-- WorkTime Column -->
+    <ng-container matColumnDef="WorkTime">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Arbeitszeit</th>
+        <td mat-cell *matCellDef="let element">{{element.WorkTimeMs | timeSpanPipe}} h</td>
+    </ng-container>
 
-  <!-- WorkTime Column -->
-  <ng-container matColumnDef="WorkTime">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Arbeitszeit</th>
-    <td mat-cell *matCellDef="let element">{{element.WorkTime}}</td>
-  </ng-container>
+    <!-- DriveTime Column -->
+    <ng-container matColumnDef="DriveTime">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Fahrzeit</th>
+        <td mat-cell *matCellDef="let element">{{element.DriveTimeMs | timeSpanPipe}} h</td>
+    </ng-container>
 
-  <!-- DriveTime Column -->
-  <ng-container matColumnDef="DriveTime">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Fahrzeit</th>
-    <td mat-cell *matCellDef="let element">{{element.DriveTime}}</td>
-  </ng-container>
+    <!-- Remove Column -->
+    <ng-container matColumnDef="Remove">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element" (click)="this.DeleteWorkDayEntry(element.Date)">X</td>
+    </ng-container>
 
-  <!-- Remove Column -->
-  <ng-container matColumnDef="Remove">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
-    <td mat-cell *matCellDef="let element" (click)="this.DeleteWorkDayEntry(element.Date)">X</td>
-  </ng-container>
-
-  <tr mat-header-row *matHeaderRowDef="this.DisplayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: this.DisplayedColumns;"></tr>
+    <tr mat-header-row *matHeaderRowDef="this.DisplayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: this.DisplayedColumns;"></tr>
 </table>
