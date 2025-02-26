@@ -8,6 +8,8 @@ import { TimeSpanPipe } from '../../Pipes/time-span.pipe';
 import { ExportHelper } from '../../Helper/ExportHelper';
 import { DownloadHelper } from '../../Helper/DownloadHelper';
 import { DateHelper } from '../../Helper/DateHelper';
+import { Logger } from 'serilogger';
+import { LoggerService } from '../../services/Logger/logger.service';
 
 @Component({
     selector: 'app-history',
@@ -20,6 +22,11 @@ export class HistoryComponent implements AfterViewInit
 {
     // #region fields
     /**
+     * Service für Lognachrichten
+     */
+    private readonly logger: Logger;
+
+    /**
      * Repository für Arbeitszeiten
      */
     private readonly timeRepositoryService: TimeRepositoryService;
@@ -29,8 +36,11 @@ export class HistoryComponent implements AfterViewInit
     /**
      * Initialisiert die Komponente
      */
-    public constructor(timeRepositoryService: TimeRepositoryService)
+    public constructor(
+        loggerService: LoggerService,
+        timeRepositoryService: TimeRepositoryService)
     {
+        this.logger = loggerService.Logger;
         this.timeRepositoryService = timeRepositoryService;
 
         this.DataSource = new MatTableDataSource<WorkDayOverview>();
@@ -55,6 +65,8 @@ export class HistoryComponent implements AfterViewInit
      */
     public ngAfterViewInit()
     {
+        this.logger.info("HistoryComponent > ngAfterViewInit: Wurde aufgerufen");
+
         this.DataSource.sort = this.Sort;
     }
     // #endregion
@@ -88,13 +100,23 @@ export class HistoryComponent implements AfterViewInit
      */
     public async DeleteWorkDayEntry(date: Date): Promise<void>
     {
+        this.logger.info("HistoryComponent > DeleteWorkDayEntry: Wurde aufgerufen");
+
         let dateString = `${date.getDate().toString().padStart(2, "0")}.${(date.getMonth() + 1).toString().padStart(2, "0")}.${date.getFullYear()}`;
 
-        if (confirm(`Element löschen (${dateString})?`))
+        let userMessage = `Element löschen (${dateString})?`;
+        this.logger.debug("HistoryComponent > DeleteWorkDayEntry: Frage beim Benutzer nach, ob den Eintrag löschen möchte (\"{0}\")...", userMessage);
+        if (confirm(userMessage))
         {
+            this.logger.debug("HistoryComponent > DeleteWorkDayEntry: Benutzer hat dem Löschen zugestimmt. Löschte den Eintrag aus der Index-DB...");
             await this.timeRepositoryService.DeleteWorkDay(date);
 
+            this.logger.debug("HistoryComponent > DeleteWorkDayEntry: Aktualisiert die angezeigten Daten...");
             this.FillDataSource();
+        }
+        else
+        {
+            this.logger.verbose("HistoryComponent > DeleteWorkDayEntry: Benutzer hat dem Löschen nicht zugestimmt...");
         }
     }
     // #endregion
@@ -105,6 +127,9 @@ export class HistoryComponent implements AfterViewInit
      */
     public async ExportAsCsv(): Promise<void>
     {
+        this.logger.info("HistoryComponent > ExportAsCsv: Wurde aufgerufen");
+
+        this.logger.debug("HistoryComponent > ExportAsCsv: Erstelle das CSV anhand der angezeigten Daten...");
         let csvBlob = ExportHelper.WorkDayToCsv(this.DataSource.data);
 
         let oldestWorkDate: Date | null = null;
@@ -123,9 +148,11 @@ export class HistoryComponent implements AfterViewInit
             }
         }
 
+        let fileName = `Arbeitszeiten_${DateHelper.FormatDate(oldestWorkDate, "yyyy_MM_dd")}-${DateHelper.FormatDate(latestWorkDate, "yyyy_MM_dd")}.csv`;
+        this.logger.debug("HistoryComponent > ExportAsCsv: Downloade die erstellte CSV-Datei ({0})...", fileName);
         await DownloadHelper.DownloadFileBlob(
             csvBlob,
-            `Arbeitszeiten_${DateHelper.FormatDate(oldestWorkDate, "yyyy_MM_dd")}-${DateHelper.FormatDate(latestWorkDate, "yyyy_MM_dd")}.csv`
+            fileName
         );
     }
     // #endregion
@@ -136,10 +163,14 @@ export class HistoryComponent implements AfterViewInit
      */
     private async FillDataSource(): Promise<void>
     {
+        this.logger.info("HistoryComponent > FillDataSource: Wurde aufgerufen");
+
+        this.logger.debug("HistoryComponent > FillDataSource: Ermittle alle Arbeitstage aus der Index-DB...");
         let workDays = await this.timeRepositoryService.GetWorkDays(new Date(2000, 1, 1), new Date());
 
         let historyDays = new Array<WorkDayOverview>();
 
+        this.logger.debug("HistoryComponent > FillDataSource: Wandle die Arbeitstage in HistorienTag und zeige diese an...");
         for (let workDay of workDays)
         {
             historyDays.push(TimeRepositoryService.ConvertWorkDayToHistoryDay(workDay));

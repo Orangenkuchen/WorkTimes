@@ -8,6 +8,8 @@ import { TimeSlice } from '../../entities/TimeSlice';
 import { TimeSliceType } from '../../entities/TimeSliceType';
 import { LiveTimeSpanDirective } from '../../directives/LiveTimeSpan/live-time-span.directive';
 import { ActiveWorkDay } from '../../entities/ActiveWorkDay';
+import { Logger } from 'serilogger';
+import { LoggerService } from '../../services/Logger/logger.service';
 
 interface DayDisplay
 {
@@ -67,6 +69,11 @@ export class CurrentWorkComponent
 {
     // #region fields
     /**
+     * Service für Lognachrichten
+     */
+    private readonly logger: Logger;
+
+    /**
      * Servcie zum bereitigen von HTML, Url, ...
      */
     private readonly sanitizer: DomSanitizer;
@@ -81,13 +88,16 @@ export class CurrentWorkComponent
     /**
      * Initialisiert die Komponente
      * 
+     * @param loggerService Service für Lognachrichten
      * @param timeRepositoryService Servcie zum bereitigen von HTML, Url, ...
      * @param sanitizer Repository für Arbeitszeiten
      */
     public constructor(
+        loggerService: LoggerService,
         timeRepositoryService: TimeRepositoryService,
         sanitizer:DomSanitizer)
     {
+        this.logger = loggerService.Logger;
         this.timeRepositoryService = timeRepositoryService;
         this.sanitizer = sanitizer;
 
@@ -135,11 +145,20 @@ export class CurrentWorkComponent
      */
     public async StartTransfer(): Promise<void>
     {
+        this.logger.info("CurrentWorkComponent > StartTransfer: Wurde aufgerufen");
+
         let currentDayWork = await this.CurrentDayWorkPromise;
 
+        this.logger.debug("CurrentWorkComponent > StartTransfer: Beende den aktuellen TimeSlice...");
         currentDayWork.WorkDay.EndCurrentTimeSliceIfNotEnded();
+
+        this.logger.debug(
+            "CurrentWorkComponent > StartTransfer: Starte einen neuen TimeSlice ({0})...",
+            TimeSliceType[TimeSliceType.Transfer]
+        );
         currentDayWork.WorkDay.StartNewTimeSliceIfNonRunning(TimeSliceType.Transfer);
 
+        this.logger.debug("CurrentWorkComponent > StartTransfer: Speichere den aktuell Tag in der Index-DB...");
         await this.timeRepositoryService.PutWorkDay(
             {
                 Date: currentDayWork.WorkDay.Date,
@@ -147,7 +166,9 @@ export class CurrentWorkComponent
             }
         );
 
+        this.logger.debug("CurrentWorkComponent > StartTransfer: Aktualisiere die angezeigten TimeSlices...");
         this.RefreshCurrentDayAndTimeStatus();
+
         //this.LoadAndSetStateGrafic();
     }
     // #endregion
@@ -158,10 +179,14 @@ export class CurrentWorkComponent
      */
     public async EndTransfer(): Promise<void>
     {
+        this.logger.info("CurrentWorkComponent > EndTransfer: Wurde aufgerufen");
+
         let currentDayWork = await this.CurrentDayWorkPromise;
 
+        this.logger.debug("CurrentWorkComponent > EndTransfer: Beende den aktuellen TimeSlice...");
         currentDayWork.WorkDay.EndCurrentTimeSliceIfNotEnded();
 
+        this.logger.debug("CurrentWorkComponent > EndTransfer: Speichere den aktuell Tag in der Index-DB...");
         await this.timeRepositoryService.PutWorkDay(
             {
                 Date: currentDayWork.WorkDay.Date,
@@ -169,6 +194,7 @@ export class CurrentWorkComponent
             }
         );
 
+        this.logger.debug("CurrentWorkComponent > EndTransfer: Aktualisiere die angezeigten TimeSlices...");
         this.RefreshCurrentDayAndTimeStatus();
         //this.LoadAndSetStateGrafic();
     }
@@ -180,11 +206,20 @@ export class CurrentWorkComponent
      */
     public async StartWork(): Promise<void>
     {
+        this.logger.info("CurrentWorkComponent > StartWork: Wurde aufgerufen");
+
         let currentDayWork = await this.CurrentDayWorkPromise;
 
+        this.logger.debug("CurrentWorkComponent > StartWork: Beende den aktuellen TimeSlice...");
         currentDayWork.WorkDay.EndCurrentTimeSliceIfNotEnded();
+
+        this.logger.debug(
+            "CurrentWorkComponent > StartWork: Starte einen neuen TimeSlice ({0})...",
+            TimeSliceType[TimeSliceType.Work]
+        );
         currentDayWork.WorkDay.StartNewTimeSliceIfNonRunning(TimeSliceType.Work);
 
+        this.logger.debug("CurrentWorkComponent > StartWork: Speichere den aktuell Tag in der Index-DB...");
         await this.timeRepositoryService.PutWorkDay(
             {
                 Date: currentDayWork.WorkDay.Date,
@@ -192,6 +227,7 @@ export class CurrentWorkComponent
             }
         );
 
+        this.logger.debug("CurrentWorkComponent > StartWork: Aktualisiere die angezeigten TimeSlices...");
         this.RefreshCurrentDayAndTimeStatus();
         //this.LoadAndSetStateGrafic();
     }
@@ -203,10 +239,14 @@ export class CurrentWorkComponent
      */
     public async EndWork(): Promise<void>
     {
+        this.logger.info("CurrentWorkComponent > EndWork: Wurde aufgerufen");
+
         let currentDayWork = await this.CurrentDayWorkPromise;
 
+        this.logger.verbose("CurrentWorkComponent > EndWork: Beende den aktuellen TimeSlice...");
         currentDayWork.WorkDay.EndCurrentTimeSliceIfNotEnded();
 
+        this.logger.verbose("CurrentWorkComponent > EndWork: Speichere den aktuell Tag in der Index-DB...");
         await this.timeRepositoryService.PutWorkDay(
             {
                 Date: currentDayWork.WorkDay.Date,
@@ -214,6 +254,7 @@ export class CurrentWorkComponent
             }
         );
 
+        this.logger.verbose("CurrentWorkComponent > EndWork: Aktualisiere die angezeigten TimeSlices...");
         this.RefreshCurrentDayAndTimeStatus();
         //this.LoadAndSetStateGrafic();
     }
@@ -222,10 +263,15 @@ export class CurrentWorkComponent
     // #region RefreshCurrentDayAndTimeStatus
     /**
      * Ermittelt den aktuellen Arbeitstag aus der Datenbank erneut
-     * und füllt ahnhand dessen die Variable {@see CurrentStatus}
+     * und füllt ahnhand dessen die Variable {@link CurrentStatus}
      */
     private async RefreshCurrentDayAndTimeStatus(): Promise<void>
     {
+        this.logger.info("CurrentWorkComponent > RefreshCurrentDayAndTimeStatus: Wurde aufgerufen");
+
+        this.logger.debug(
+            "CurrentWorkComponent > RefreshCurrentDayAndTimeStatus: Ermittle den aktuellen Tag aus der Index-DB und weise diese zu..."
+        );
         this.CurrentDayWorkPromise = this.GetCurrentDayWork();
         let currentDay = await this.CurrentDayWorkPromise;
 
@@ -259,6 +305,8 @@ export class CurrentWorkComponent
      */
     private async LoadAndSetStateGrafic(): Promise<void>
     {
+        this.logger.info("CurrentWorkComponent > LoadAndSetStateGrafic: Wurde aufgerufen");
+
         let currentTime = new Date();
         let lastMonth = new Date(
             currentTime.getFullYear(),
@@ -272,14 +320,10 @@ export class CurrentWorkComponent
         );
         endOfDay.setSeconds(-1);
 
-        let workDays = await new Promise<Array<WorkDay>>(
-            async (success, reject) => {
-                let workDays = await this.timeRepositoryService.GetWorkDays(lastMonth, endOfDay);
+        this.logger.debug("CurrentWorkComponent > LoadAndSetStateGrafic: Ermittle die Arbeitstage vom letzten Monat...");
+        let workDays = await this.timeRepositoryService.GetWorkDays(lastMonth, endOfDay);
 
-                success(workDays);
-            }
-        );
-
+        this.logger.debug("CurrentWorkComponent > LoadAndSetStateGrafic: Erstelle aus den Arbeitstagen ein SVG und zeige dies an...");
         this.DayStatusChart = this.sanitizer.bypassSecurityTrustHtml(StateDiagramm.Create(workDays).outerHTML);
     }
     // #endregion
@@ -292,6 +336,8 @@ export class CurrentWorkComponent
      */
     private async GetCurrentDayWork(): Promise<DayDisplay>
     {
+        this.logger.info("CurrentWorkComponent > GetCurrentDayWork: Wurde aufgerufen");
+
         let currentTime = new Date();
         let startOfDay = new Date(
             currentTime.getFullYear(),
@@ -305,6 +351,7 @@ export class CurrentWorkComponent
         );
         endOfDay.setSeconds(-1);
 
+        this.logger.debug("CurrentWorkComponent > GetCurrentDayWork: Ermittle die Arbeitstage vom letzten Monat...");
         let workDays = await this.timeRepositoryService.GetWorkDays(startOfDay, endOfDay);
 
         let emptyDayStatus: DayDisplay = {

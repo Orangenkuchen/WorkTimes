@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { WorkDay } from '../../entities/WorkDay';
 import { WorkDayOverview } from '../../entities/HistoryDay';
 import { TimeSliceType } from '../../entities/TimeSliceType';
+import { Logger } from 'serilogger';
+import { LoggerService } from '../Logger/logger.service';
 
 /**
  * Repository für Arbeitszeiten
@@ -13,6 +15,11 @@ export class TimeRepositoryService
 {
     // #region fields
     /**
+     * Service für Lognachrichten
+     */
+    private readonly logger: Logger;
+
+    /**
      * Promise für die Index-DB
      */
     private readonly databasePromise: Promise<IDBDatabase>;
@@ -21,34 +28,48 @@ export class TimeRepositoryService
     // #region ctor
     /**
      * Initialisiert den Service
+     *
+     * @param loggerService Service für Lognachrichten
      */
-    public constructor()
+    public constructor(loggerService: LoggerService)
     {
+        this.logger = loggerService.Logger;
+
+        this.logger.debug("TimeRepositoryService > ctor: Wurde aufgerufen");
+
         this.databasePromise = new Promise(
             (resolve, reject) =>
             {
-                let openDbRequest = window.indexedDB.open("WorkTimeDb", 1);
+                const dbName = "WorkTimeDb";
+                const indexDbVersion = 1;
+
+                this.logger.debug("TimeRepositoryService > ctor: Öffne die Index-DB (Name: {0}; Version: {1})", dbName, indexDbVersion);
+                let openDbRequest = window.indexedDB.open(dbName, indexDbVersion);
 
                 openDbRequest.onsuccess = () =>
                 {
+                    this.logger.verbose("TimeRepositoryService > ctor: Datenbank wurde erfolgreich geöffnet");
                     resolve(openDbRequest.result);
                 };
 
                 openDbRequest.onerror = (event) =>
                 {
+                    let error = (<any>event?.target)?.error;
+
+                    if (error instanceof Error == false)
+                    {
+                        error = new Error(error.toString());
+                    }
+
+                    this.logger.error(error, "TimeRepositoryService > ctor: Fehler beim Öffnen der Datenbank");
                     reject((<any>event?.target)?.error);
                 };
 
                 openDbRequest.onupgradeneeded = (event) =>
                 {
+                    this.logger.verbose("TimeRepositoryService > ctor: Die Datenbank benötigt ein Updgrade...");
                     this.OnUpgradeNeeded(event);
                 }
-            }
-        );
-        this.databasePromise.then(
-            (database) =>
-            {
-                
             }
         );
     }
@@ -56,7 +77,7 @@ export class TimeRepositoryService
 
     // #region static ConvertWorkDayToHistoryDay
     /**
-     * Wandelt einen {@see WorkDay} in einen {@see WorkDayOverview} um
+     * Wandelt einen {@link WorkDay} in einen {@link WorkDayOverview} um
      * 
      * @param workDay Der WorkDay, der umgewandelt werden soll
      * @returns Gibt den WorkDayOverview zurück
@@ -246,12 +267,24 @@ export class TimeRepositoryService
      */
     private OnUpgradeNeeded(event: IDBVersionChangeEvent): void
     {
+        this.logger.debug(
+            "TimeRepositoryService > OnUpgradeNeeded: Wurde aufgerufen (OldVersion: {0}; NewVersion: {1}). Führt die notwendigen upgrades durch",
+            event.oldVersion,
+            event.newVersion
+        );
+
         for (let version = event.oldVersion + 1; version <= (event.newVersion ?? event.oldVersion); version++)
         {
             switch(version)
             {
                 case 1:
                     this.UpgradeVersion0To1((<any>event.target).result);
+                    break;
+
+                default:
+                    var error = new Error(`Für die Versionsnummer ${version} existiert keine Migration.`);
+
+                    this.logger.error(error, "Fehler beim Upgraden der Index-DB");
                     break;
             }
         }
@@ -266,8 +299,17 @@ export class TimeRepositoryService
      */
     public UpgradeVersion0To1(database: IDBDatabase): void
     {
-        let workTimesObjectStore = database.createObjectStore("WorkTimes", { autoIncrement: true });
+        const objectStoreName = "WorkTimes";
+        const properties: IDBObjectStoreParameters = { autoIncrement: true };
 
+        this.logger.verbose(
+            "TimeRepositoryService > UpgradeVersion0To1: Wurde aufgerufen. Füge die Tabelle {0} ({@1})...",
+            objectStoreName,
+            properties
+        );
+        let workTimesObjectStore = database.createObjectStore(objectStoreName, properties);
+
+        this.logger.verbose("TimeRepositoryService > UpgradeVersion0To1: Füge den Index \"Date\" zum ObjectStore hinzu...");
         workTimesObjectStore.createIndex("Date", "Date");
     }
     // #endregion
