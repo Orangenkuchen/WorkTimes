@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1740572475927,
+  "timestamp": 1740578033474,
   "index": "./index.html",
   "assetGroups": [
     {
@@ -11,14 +11,14 @@
         "ignoreVary": true
       },
       "urls": [
-        "./chunk-OU6J7IBT.js",
-        "./chunk-ULPMINS2.js",
+        "./chunk-R3WRYP47.js",
+        "./chunk-TT6OYGLJ.js",
         "./favicon.ico",
         "./index.html",
-        "./main-XJ6E53KO.js",
+        "./main-A2VSCRIB.js",
         "./manifest.webmanifest",
         "./polyfills-Q763KACN.js",
-        "./styles-WLYXO4IY.css"
+        "./styles-35KUAAWE.css"
       ],
       "patterns": []
     },
@@ -43,15 +43,15 @@
     "./assets/fonts/ubuntu-light-webfont.woff2": "09f6b2b4316749b1435f06317006878fc2396530",
     "./assets/icons/FavIcon.png": "007cccf04825a7c36575e44893e38a070d04b67f",
     "./assets/icons/FavIcon.svg": "3eba097d4b1274e08de39381513102a8a6f37f36",
-    "./chunk-OU6J7IBT.js": "f4f56598e4012b728313a6b6885ca774da5600a8",
-    "./chunk-ULPMINS2.js": "612eee092fa22dbe2ded7fefad1344b38a3f82fb",
+    "./chunk-R3WRYP47.js": "7ce2e05a22dfe211c597b49b83a0743a01d27ef3",
+    "./chunk-TT6OYGLJ.js": "e412adb7c7cb2de491c850fc384a763385355795",
     "./favicon.ico": "9686238a20b1a621601311666d2341d18fbc7f22",
-    "./index.html": "9ff655755c17e98639593e09d6d36424ca2ca0bb",
-    "./main-XJ6E53KO.js": "f5640d75e29f945152f8ae4bd55bf0e552920cac",
+    "./index.html": "1adeaac61bd7dd3ffacd51258adfde3c733e74a7",
+    "./main-A2VSCRIB.js": "ec91be9103d7852d0c5e395fcc8f7aa1a98a38c3",
     "./manifest.webmanifest": "f97d78dcf0d1833f05667abf26b496ec76e2e00a",
     "./media/ubuntu-light-webfont-2TRHHGVR.woff2": "09f6b2b4316749b1435f06317006878fc2396530",
     "./polyfills-Q763KACN.js": "e2a9f135443e4bc6115449a6098604d881bf5931",
-    "./styles-WLYXO4IY.css": "e0e6e870ad01e32f228dac419553bc97b7121db5"
+    "./styles-35KUAAWE.css": "676a649eabffe1d1ffb9c54f216f37b25682e0bf"
   },
   "navigationUrls": [
     {
