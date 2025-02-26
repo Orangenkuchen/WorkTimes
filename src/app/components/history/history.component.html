@@ -1,6 +1,8 @@
 <div class="Header">
     <p class="Text">Letzen Arbeitszeiten</p>
-    <button (click)="this.ExportAsCsv()">Export</button>
+    <button mat-flat-button (click)="this.ExportAsCsv()">
+        <mat-icon aria-hidden="false" aria-label="export csv" fontIcon="download"></mat-icon>
+    </button>
 </div>
 <table mat-table [dataSource]="this.DataSource" matSort>
 
@@ -43,7 +45,12 @@
     <!-- Remove Column -->
     <ng-container matColumnDef="Remove">
         <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let element" (click)="this.DeleteWorkDayEntry(element.Date)">X</td>
+        <td mat-cell 
+            *matCellDef="let element"
+            (click)="this.DeleteWorkDayEntry(element.Date)"
+            class="Clickable">
+            <mat-icon aria-hidden="false" aria-label="delete" fontIcon="delete"></mat-icon>
+        </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="this.DisplayedColumns"></tr>

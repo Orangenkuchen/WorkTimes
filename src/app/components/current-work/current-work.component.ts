@@ -10,6 +10,7 @@ import { LiveTimeSpanDirective } from '../../directives/LiveTimeSpan/live-time-s
 import { ActiveWorkDay } from '../../entities/ActiveWorkDay';
 import { Logger } from 'serilogger';
 import { LoggerService } from '../../services/Logger/logger.service';
+import { MatButtonModule } from '@angular/material/button';
 
 interface DayDisplay
 {
@@ -60,7 +61,8 @@ enum TimeStatus {
     standalone: true,
     imports: [
         CommonModule,
-        LiveTimeSpanDirective
+        LiveTimeSpanDirective,
+        MatButtonModule
     ],
     templateUrl: './current-work.component.html',
     styleUrl: './current-work.component.less'
@@ -272,7 +274,10 @@ export class CurrentWorkComponent
         this.logger.debug(
             "CurrentWorkComponent > RefreshCurrentDayAndTimeStatus: Ermittle den aktuellen Tag aus der Index-DB und weise diese zu..."
         );
-        this.CurrentDayWorkPromise = this.GetCurrentDayWork();
+        let currentWorkDayPromise = this.GetCurrentDayWork();
+        await currentWorkDayPromise;
+
+        this.CurrentDayWorkPromise = currentWorkDayPromise;
         let currentDay = await this.CurrentDayWorkPromise;
 
         if (currentDay.TransferTimeBeforeWork.Start == null)

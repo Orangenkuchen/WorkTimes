@@ -49,12 +49,16 @@
     <div class="ButtonContainer"
          [ngSwitch]="this.CurrentStatus">
         <button *ngSwitchCase="this.TimeStatus.Initial"
-            (click)="this.StartTransfer()">Fahrtweg start</button>
+                mat-flat-button
+                (click)="this.StartTransfer()">Fahrtweg start</button>
         <button *ngSwitchCase="this.TimeStatus.DrivingToWork"
+                mat-flat-button
             (click)="this.StartWork()">Arbeit start</button>
         <button *ngSwitchCase="this.TimeStatus.AtWork"
+                mat-flat-button
                 (click)="this.StartTransfer()">Fahrtweg start</button>
         <button *ngSwitchCase="this.TimeStatus.DrivingHome"
+                mat-flat-button
                 (click)="this.EndTransfer()">Fahrtweg stop</button>
     </div>
 </ng-container>

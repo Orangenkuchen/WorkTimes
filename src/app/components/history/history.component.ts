@@ -10,11 +10,20 @@ import { DownloadHelper } from '../../Helper/DownloadHelper';
 import { DateHelper } from '../../Helper/DateHelper';
 import { Logger } from 'serilogger';
 import { LoggerService } from '../../services/Logger/logger.service';
+import { MatButtonModule } from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
 
 @Component({
     selector: 'app-history',
     standalone: true,
-    imports: [MatTableModule, MatSortModule, DatePipe, TimeSpanPipe],
+    imports: [
+        MatTableModule,
+        MatButtonModule,
+        MatSortModule,
+        MatIconModule,
+        DatePipe,
+        TimeSpanPipe
+    ],
     templateUrl: './history.component.html',
     styleUrl: './history.component.less'
 })
