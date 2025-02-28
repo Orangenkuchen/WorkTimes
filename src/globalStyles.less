@@ -1,3 +1,4 @@
+@DefaultContainerRadius: 10px;
 
 // Dieses Dictionary gibt die Farben von der Anwendung vor.
 // Es wird beim Compilieren als CSS-Variablen an den Body gehängt.
@@ -8,22 +9,31 @@
     // Die Farbe vom der Schrift
     FontColor: black;
     // Die Farbe von ausgebleichter Schrift
-    FontColorDimm: #474747;
+    FontColorDimm: #727272;
 
     // Die Farbe vom Hintergrund von der Webseite
-    BackgroundColor: #FAFAFA;
+    BackgroundColor: #EAEAEA;
     // Die Farbe vom Containern, welche direkt über dem Seitenhintergrund sind.
     ContainerColor: #FFFFFF;
-    ContainerBorderColor: #a8a8a8;
+
+    // Farben für Nachrichten
+    SuccessColor: #007502;
+    InfoColor: #1848dd;
+    WarningColor: #bb9100;
+    ErrorColor: #d50000;
 }
 
 // Dieses Dictionary gibt die Farben von der Anwendung im Darkmode vor.
 // Nähere Infromationen siehe: @BrightColorPallet.
 @DarkColorPallet: {
     FontColor: white;
-    FontColorDimm: #cacaca;
+    FontColorDimm: #727272;
 
-    BackgroundColor: #0a0a0a;
-    ContainerColor: #000000;
-    ContainerBorderColor: #3d3d3d;
+    BackgroundColor: #000000;
+    ContainerColor: #101010;
+
+    SuccessColor: #007502;
+    InfoColor: #1848dd;
+    WarningColor: #bb9100;
+    ErrorColor: #860000;
 }

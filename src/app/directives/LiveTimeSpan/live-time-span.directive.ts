@@ -18,6 +18,7 @@ const MillisecondsInHour: number = MillisecondsInMinute * 60
  */
 interface TimeFragments
 {
+    IsNegative: boolean,
     Hours: number,
     Minutes: number,
     Seconds: number,
@@ -29,6 +30,7 @@ interface TimeFragments
  */
 @Directive({
     selector: '[appLiveTimeSpan]',
+    exportAs: "liveTimeSpan",
     standalone: true
 })
 export class LiveTimeSpanDirective implements OnDestroy, OnChanges
@@ -43,18 +45,6 @@ export class LiveTimeSpanDirective implements OnDestroy, OnChanges
      * Der Timer der die Zeit anzeigt
      */
     private timer: ReturnType<typeof setInterval> | null;
-
-    /**
-     * Der Startzeitpunkt von dem an die Zeitspanne angezeigt werden soll.
-     * Wenn null wird der aktuelle Zeitpunkt angenommen.
-     */
-    @Input() startTime: Date | null;
-
-    /**
-     * Der Endzeitpunkt bis dem die Zeitspanne angezeigt werden soll.
-     * Wenn  null wird der aktuelle Zeitpunkt (live) angezeigt.
-     */
-    @Input() endTime: Date | null;
     // #endregion
 
     // #region ctor
@@ -66,11 +56,13 @@ export class LiveTimeSpanDirective implements OnDestroy, OnChanges
     public constructor(elementRef: ElementRef)
     {
         this.elementRef = elementRef;
-        this.startTime = null;
-        this.endTime = null;
         this.timer = null;
         this.StartTime = null;
         this.EndTime = null;
+
+        this.Format = 'h:mm:ss:zzz';
+        this.TimeDeltaInMs = 0;
+        this.LiveTimeDiffInMs = 0;
     }
     // #endregion
 
@@ -87,7 +79,7 @@ export class LiveTimeSpanDirective implements OnDestroy, OnChanges
     }
     // #endregion
 
-    // #region startTime
+    // #region StartTime
     /**
      * Der Startzeitpunkt von dem an die Zeitspanne angezeigt werden soll.
      * Wenn null wird der aktuelle Zeitpunkt angenommen.
@@ -95,7 +87,7 @@ export class LiveTimeSpanDirective implements OnDestroy, OnChanges
     @Input() StartTime: Date | null;
     // #endregion
 
-    // #region endTime
+    // #region EndTime
     /**
      * Der Endzeitpunkt bis dem die Zeitspanne angezeigt werden soll.
      * Wenn  null wird der aktuelle Zeitpunkt (live) angezeigt.
@@ -103,15 +95,35 @@ export class LiveTimeSpanDirective implements OnDestroy, OnChanges
     @Input() EndTime: Date | null;
     // #endregion
 
+    // #region Format
+    /**
+     * Das Format in dem die Differenez angezeigt werden soll.
+     * z.B. 'h:mm:ss' -> 15:00:01
+     */
+    @Input() Format: string;
+    // #endregion
+
+    // #region LiveTimeDiffInMs
+    /**
+     * Die Zeitspanne in Millisekunden.
+     */
+    public LiveTimeDiffInMs: number;
+    // #endregion
+
+    // #region TimeDeltaInMs
+    /**
+     * Das Zeitdelta, das vor dem Anzeigen auf den Zeitunterschied aufgerechnet werden soll.
+     * z.B. 'h:mm:ss' -> 15:00:01
+     */
+    @Input() TimeDeltaInMs: number;
+    // #endregion
+
     // #region ngOnChanges
     /**
      * Wird aufgerufen, wenn ein Input sich ändern
      */
     public ngOnChanges()
-    {
-        this.startTime = this.StartTime;
-        this.endTime = this.EndTime;
-        
+    {        
         this.ReinitializeDisplay();
     }
     // #endregion
@@ -126,6 +138,7 @@ export class LiveTimeSpanDirective implements OnDestroy, OnChanges
     public static SplitMillisecondsIntoParts(milliseconds: number): TimeFragments
     {
         let result: TimeFragments = {
+            IsNegative: milliseconds < 0,
             Hours: 0,
             Minutes: 0,
             Seconds: 0,
@@ -134,18 +147,35 @@ export class LiveTimeSpanDirective implements OnDestroy, OnChanges
 
         let remainingMilliseconds = milliseconds;
 
-        result.Hours = Math.floor(remainingMilliseconds / MillisecondsInHour);
+        result.Hours = this.RoundTowardsZero(remainingMilliseconds / MillisecondsInHour);
         remainingMilliseconds -= result.Hours * MillisecondsInHour;
 
-        result.Minutes = Math.floor(remainingMilliseconds / MillisecondsInMinute);
+        result.Minutes = this.RoundTowardsZero(remainingMilliseconds / MillisecondsInMinute);
         remainingMilliseconds -= result.Minutes * MillisecondsInMinute;
 
-        result.Seconds = Math.floor(remainingMilliseconds / MillisecondsInSecond);
+        result.Seconds = this.RoundTowardsZero(remainingMilliseconds / MillisecondsInSecond);
         remainingMilliseconds -= result.Seconds * MillisecondsInSecond;
 
         result.Milliseconds = remainingMilliseconds;
 
+        result.Hours = Math.abs(result.Hours);
+        result.Minutes = Math.abs(result.Minutes);
+        result.Seconds = Math.abs(result.Seconds);
+        result.Milliseconds = Math.abs(result.Milliseconds);
+
         return result;
+    }
+    // #endregion
+
+    // #region RoundTowardsZero
+    /**
+     * Rundet die Zahl runter (foor) wenn positiv oder hoch (ceil) wenn negativ
+     * 
+     * @param number Die Zahl die gerundet werden soll
+     */
+    private static RoundTowardsZero(number: number): number
+    {
+        return number >= 0 ? Math.floor(number) : Math.ceil(number); 
     }
     // #endregion
 
@@ -155,14 +185,10 @@ export class LiveTimeSpanDirective implements OnDestroy, OnChanges
      */
     private ReinitializeDisplay()
     {
-        if (this.startTime == null)
+        if (this.EndTime == null)
         {
-            this.startTime = new Date();
-        }
-
-        if (this.endTime == null)
-        {
-            this.timer = setInterval(() => { this.HandleOnIntervalElapsed(); }, 200);
+            this.timer = setInterval(() => { this.HandleOnIntervalElapsed(); }, 2000);
+            this.HandleOnIntervalElapsed();
         }
         else
         {
@@ -183,15 +209,25 @@ export class LiveTimeSpanDirective implements OnDestroy, OnChanges
      */
     private HandleOnIntervalElapsed(): void
     {
-        if (this.startTime != null)
+        if (this.StartTime != null)
         {
-            let endTime = this.endTime ?? new Date();
+            let endTime = this.EndTime ?? new Date();
 
-            let timeDifference = endTime.getTime() - this.startTime.getTime();
+            let timeDifference = (endTime.getTime() - this.StartTime.getTime()) + this.TimeDeltaInMs;
+            this.LiveTimeDiffInMs = timeDifference;
 
             let timeFragments = LiveTimeSpanDirective.SplitMillisecondsIntoParts(timeDifference);
 
-            let result = `${timeFragments.Hours}:${timeFragments.Minutes.toString().padStart(2, "0")}:${timeFragments.Seconds.toString().padStart(2, "0")}`;
+            let result = this.Format.toLowerCase()
+                                    .replaceAll("h", timeFragments.Hours.toString())
+                                    .replaceAll("mm", timeFragments.Minutes.toString().padStart(2, "0"))
+                                    .replaceAll("ss", timeFragments.Seconds.toString().padStart(2, "0"))
+                                    .replaceAll("zzz", timeFragments.Milliseconds.toString());
+
+            if (timeDifference < 0)
+            {
+                result = result.replaceAll("+", "-");
+            }
 
             (<HTMLElement>this.elementRef.nativeElement).innerText = result;
         }

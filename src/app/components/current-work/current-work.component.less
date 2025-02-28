@@ -1,66 +1,92 @@
+@import '../../../globalStyles.less';
+
 :host
 {
     display: flex;
-    flex-direction: column;
-
-    margin: 10px;
-
-    background-color: var(--ContainerColor);
-
-    border-style: solid;
-    border-width: 1px;
-    border-color: var(--ContainerBorderColor);
-}
-
-.Header {
-    display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
 
-    .HeaderBlock {
-        flex-grow: 1;
-
-        display: flex;
-        flex-direction: column;
-
-        gap: 10px;
-
-        text-align: center;
-
-        &.Active {
-            font-weight: bold;
-        }
-
-        &:not(.Active)
-        {
-            color: var(--FontColorDimm);
-        }
-    }
-}
-
-.ButtonContainer {
-    display: flex;
-    flex-direction: row;
     gap: 10px;
 
-    padding: 5px;
+    margin: 15px;
 
-    height: 40px;
-
-    button {
-        flex-grow: 1;
+    p {
+        margin: 0;
+        font-size: 15px;
     }
 }
 
-.DayStatusChart {
-    max-width: 800px;
+.Spacer {
+    flex-grow: 1;
+}
 
-    ::ng-deep svg {
-        text {
-            fill: var(--FontColor);
-        }
+.TravelContainer,
+.WorkContainer {
+    flex-grow: 1;
+    flex-basis: 40%;
 
-        .LegendLine {
-            stroke: var(--ContainerBorderColor);
+    background-color: var(--ContainerColor);
+    border-radius: @DefaultContainerRadius;
+    padding: 15px;
+
+    .TimeContainer {
+        display: flex;
+        flex-direction: row;
+
+        margin-top: 10px;
+        line-height: 25px;
+
+        .Time {
+            font-size: 25px;
         }
     }
+}
+
+.TravelContainer {
+    .TimeContainer {
+        color: var(--FontColorDimm);
+    }
+}
+
+.SuccessColor {
+    color: var(--SuccessColor);
+}
+
+.InfoColor {
+    color: var(--InfoColor);
+}
+
+.WarningColor {
+    color: var(--WarningColor);
+}
+
+.ErrorColor {
+    color: var(--ErrorColor);
+}
+
+
+
+.TimeButton {
+    flex-grow: 1;
+
+    background-color: var(--SuccessColor);
+    color: white;
+
+    font-size: 28px;
+
+    cursor: pointer;
+
+    border-style: none;
+    border-radius: @DefaultContainerRadius;
+
+    padding: 15px;
+
+    &.Disabled {
+        background-color: var(--ContainerColor);
+        cursor: not-allowed;
+    }
+}
+
+.Hide {
+    display: none;
 }

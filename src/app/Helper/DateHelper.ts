@@ -52,6 +52,11 @@ export class DateHelper
             result = result.replaceAll("ss", date.getSeconds().toString().padStart(2, "0"));
         }
 
+        if (result.indexOf("zzz") != -1)
+        {
+            result = result.replaceAll("zzz", date.getMilliseconds().toString());
+        }
+
         return result;
     }
     // #endregion

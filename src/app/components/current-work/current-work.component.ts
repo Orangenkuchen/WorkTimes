@@ -11,6 +11,7 @@ import { ActiveWorkDay } from '../../entities/ActiveWorkDay';
 import { Logger } from 'serilogger';
 import { LoggerService } from '../../services/Logger/logger.service';
 import { MatButtonModule } from '@angular/material/button';
+import { MatRippleModule } from '@angular/material/core';
 
 interface DayDisplay
 {
@@ -62,7 +63,8 @@ enum TimeStatus {
     imports: [
         CommonModule,
         LiveTimeSpanDirective,
-        MatButtonModule
+        MatButtonModule,
+        MatRippleModule
     ],
     templateUrl: './current-work.component.html',
     styleUrl: './current-work.component.less'
@@ -134,7 +136,7 @@ export class CurrentWorkComponent
     public DayStatusChart: SafeHtml | null;
     // #endregion
 
-    // #region TimeStatus
+    // #region CurrentStatus
     /**
      * Der aktulle Status von der Zeitzählung
      */

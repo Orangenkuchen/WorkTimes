@@ -1,34 +1,91 @@
+@import '../../../globalStyles.less';
+
 :host
 {
     display: flex;
     flex-direction: column;
 
-    gap: 10px;
+    gap: 5px;
 
-    margin: 10px;
-    padding: 10px;
-
-    background-color: var(--ContainerColor);
-
-    border-style: solid;
-    border-width: 1px;
-    border-color: var(--ContainerBorderColor);
+    margin: 15px;
+    margin-left: 25px;
+    margin-right: 25px;
 
     overflow: auto;
 }
 
-.Header {
+.Spacer {
+    flex-grow: 1;
+}
+
+p {
+    margin: 0;
+}
+
+.MonthHeader {
     display: flex;
     flex-direction: row;
-    gap: 10px;
 
-    .Text {
-        flex-grow: 1;
+    margin-bottom: 10px;
+
+    mat-icon {
+        cursor: pointer;
     }
 }
 
-button {
-    mat-icon {
-        margin: 0;
+.DaysContainer {
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+.WorkDayContainer {
+    display: flex;
+    flex-direction: row;
+
+    gap: 15px;
+
+    padding: 10px;
+
+    background-color: var(--ContainerColor);
+    border-radius: @DefaultContainerRadius;
+
+    .DayColumn {
+        text-align: center;
+
+        .Number {
+            font-size: 24px;
+        }
     }
+
+    .TimeRanges {
+        flex-grow: 1;
+
+        .TransferTime {
+            margin-top: 3px;
+            color: var(--FontColorDimm);
+        }
+    }
+
+    .Time {
+        font-size: 24px;
+        margin-bottom: 3px;
+    }
+}
+
+.SuccessColor {
+    color: var(--SuccessColor);
+}
+
+.InfoColor {
+    color: var(--InfoColor);
+}
+
+.WarningColor {
+    color: var(--WarningColor);
+}
+
+.ErrorColor {
+    color: var(--ErrorColor);
 }

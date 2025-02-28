@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { TimeRepositoryService } from '../../services/time-repository/time-repository.service';
 import { WorkDayOverview } from '../../entities/HistoryDay';
 import { TimeSpanPipe } from '../../Pipes/time-span.pipe';
@@ -10,24 +10,62 @@ import { DownloadHelper } from '../../Helper/DownloadHelper';
 import { DateHelper } from '../../Helper/DateHelper';
 import { Logger } from 'serilogger';
 import { LoggerService } from '../../services/Logger/logger.service';
-import { MatButtonModule } from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
+import { LiveTimeSpanDirective } from '../../directives/LiveTimeSpan/live-time-span.directive';
+
+/**
+ * Die Zeiten von einem Arbeitstag
+ */
+interface WorkDayTimes {
+    /**
+     * Die Zeit vom Arbeitstag als String
+     */
+    TimeString: string;
+
+    /**
+     * Die Überstunden vom Arbeitstag als String
+     */
+    OverTimeStirng: string;
+
+    /**
+     * Die Millisekunden über der normalen Arbeitszeit (kann Negativ sein).
+     */
+    MillisecondsOvertime: number;
+}
+
+/**
+ * Eine gruppe von Arbeitstagen
+ */
+interface WorkDayGroup {
+    /**
+     * Der Zeitstempel von der Gruppe
+     */
+    Timestamp: Date;
+
+    /**
+     * Die Arbeitstage der Gruppe
+     */
+    WorkDays: Array<WorkDayOverview>;
+}
+
+/**
+ * Dictionary mit den Arbeitstagen nach Datum gruppiert
+ */
+interface WorkDayGrouped {
+    [timestamp: number]: WorkDayGroup;
+}
 
 @Component({
     selector: 'app-history',
     standalone: true,
     imports: [
-        MatTableModule,
-        MatButtonModule,
-        MatSortModule,
-        MatIconModule,
-        DatePipe,
-        TimeSpanPipe
+        CommonModule,
+        MatIconModule
     ],
     templateUrl: './history.component.html',
     styleUrl: './history.component.less'
 })
-export class HistoryComponent implements AfterViewInit
+export class HistoryComponent
 {
     // #region fields
     /**
@@ -52,53 +90,17 @@ export class HistoryComponent implements AfterViewInit
         this.logger = loggerService.Logger;
         this.timeRepositoryService = timeRepositoryService;
 
-        this.DataSource = new MatTableDataSource<WorkDayOverview>();
-
-        this.DisplayedColumns = new Array<string>(
-            "Date",
-            "ToWork",
-            "Work",
-            "ToHome",
-            "WorkTime",
-            "DriveTime",
-            "Remove"
-        );
+        this.HistoryDaysByMonth = new Array<WorkDayGroup>();
 
         this.FillDataSource();
     }
     // #endregion
 
-    // #region ngAfterViewInit
+    // #region HistoryDaysByMonth
     /**
-     * Wird aufgerufen, nach dem die View initialsiert wurde
+     * Dictionary mit den Arbeitstagen nach Datum gruppiert
      */
-    public ngAfterViewInit()
-    {
-        this.logger.info("HistoryComponent > ngAfterViewInit: Wurde aufgerufen");
-
-        this.DataSource.sort = this.Sort;
-    }
-    // #endregion
-
-    // #region Sort
-    /**
-     * Container for MatSortables to manage the sort state and provide default sort parameters.
-     */
-    @ViewChild(MatSort) Sort!: MatSort;
-    // #endregion
-
-    // #region DisplayedColumns
-    /**
-     * Array mit den Namen von den Spalten, die angezeigt werden sollen
-     */
-    public DisplayedColumns: Array<string>;
-    // #endregion
-
-    // #region DataSource
-    /**
-     * Die Datenquelle von der Tabelle
-     */
-    public DataSource: MatTableDataSource<WorkDayOverview>;
+    public HistoryDaysByMonth: Array<WorkDayGroup>;
     // #endregion
 
     // #region DeleteWorkDayEntry
@@ -138,13 +140,20 @@ export class HistoryComponent implements AfterViewInit
     {
         this.logger.info("HistoryComponent > ExportAsCsv: Wurde aufgerufen");
 
+        let workDays = new Array<WorkDayOverview>();
+
+        for (let key in this.HistoryDaysByMonth)
+        {
+            workDays.push(...this.HistoryDaysByMonth[key].WorkDays);
+        }
+
         this.logger.debug("HistoryComponent > ExportAsCsv: Erstelle das CSV anhand der angezeigten Daten...");
-        let csvBlob = ExportHelper.WorkDayToCsv(this.DataSource.data);
+        let csvBlob = ExportHelper.WorkDayToCsv(workDays);
 
         let oldestWorkDate: Date | null = null;
         let latestWorkDate: Date | null = null;
 
-        for (let workDay of this.DataSource.data)
+        for (let workDay of workDays)
         {
             if (oldestWorkDate == null || workDay.Date < <Date>oldestWorkDate)
             {
@@ -163,6 +172,152 @@ export class HistoryComponent implements AfterViewInit
             csvBlob,
             fileName
         );
+    }
+    // #endregion
+
+    // #region GetMonthNumberByIndex
+    /**
+     * Gibt den Monatsnamen anahnd vom Index aus
+     * 
+     * @param monthIndex Der Index vom Monat
+     */
+    public GetMonthNumberByIndex(monthIndex: number): string
+    {
+        switch(monthIndex)
+        {
+            case 0:
+                return "Januar";
+
+            case 1:
+                return "Februar";
+
+            case 2:
+                return "März";
+
+            case 3:
+                return "April";
+
+            case 4:
+                return "Mai";
+
+            case 5:
+                return "Juni";
+
+            case 6:
+                return "Juli";
+
+            case 7:
+                return "August";
+
+            case 8:
+                return "September";
+
+            case 9:
+                return "Oktober";
+
+            case 10:
+                return "November";
+
+            case 11:
+                return "Dezember";
+
+            default:
+                throw new Error(`Der Index ist unbekannt (${monthIndex}).`);
+        }
+    }
+    // #endregion
+
+    // #region GetWeekDayNameByIndex
+    /**
+     * Ermittelt den Name vom Wochennamen anhand vom Index
+     * 
+     * @param weekDayIndex Der Index vom Wochentag
+     */
+    public GetWeekDayNameByIndex(weekDayIndex: number): string
+    {
+        switch(weekDayIndex)
+        {
+            case 0:
+                return "Sonntag";
+
+            case 1:
+                return "Montag";
+
+            case 2:
+                return "Dienstag";
+
+            case 3:
+                return "Mittwoch";
+
+            case 4:
+                return "Donnerstag";
+
+            case 5:
+                return "Freitag";
+
+            case 6:
+                return "Samstag";
+
+            default:
+                throw new Error(`Der Index ist unbekannt (${weekDayIndex}).`);
+        }
+    }
+    // #endregion
+
+    // #region FormatDate
+    /**
+     * Formatiert das Datum anhand vom String
+     * 
+     * @param date Das Datum, das formatiert werden soll
+     * @param format Das Fromat in dem das Datum formartiert werden soll
+     */
+    public FormatDate(date: Date, format: string): string
+    {
+        return DateHelper.FormatDate(date, format)
+    }
+    // #endregion
+
+    // #region GetWorkTimeSum
+    /**
+     * Ermittelt die Summe der Arbeitszeit vom Tag
+     * 
+     * @param workDayOverview Der Arbeitstag, der summiert werden soll
+     */
+    public GetWorkTimeSum(workDayOverview: WorkDayOverview): WorkDayTimes
+    {
+        let millisecondsWorked = 0;
+
+        if (workDayOverview.StartToWork != null && workDayOverview.EndToWork != null)
+        {
+            millisecondsWorked += workDayOverview.EndToWork.getTime() - workDayOverview.StartToWork.getTime();
+        }
+
+        if (workDayOverview.StartWork != null && workDayOverview.EndWork != null)
+        {
+            millisecondsWorked += workDayOverview.EndWork.getTime() - workDayOverview.StartWork.getTime();
+        }
+
+        if (workDayOverview.StartToHome != null && workDayOverview.EndToHome != null)
+        {
+            millisecondsWorked += workDayOverview.EndToHome.getTime() - workDayOverview.StartToHome.getTime();
+        }
+
+        let workDayHours = LiveTimeSpanDirective.SplitMillisecondsIntoParts(millisecondsWorked);
+
+        let overTimeMilliseconds = millisecondsWorked - (8 * 60 * 60 * 1000);
+        let overTimeHours = LiveTimeSpanDirective.SplitMillisecondsIntoParts(overTimeMilliseconds);
+
+        let result: WorkDayTimes = {
+            TimeString: `${workDayHours.Hours.toString().padStart(2, "0")}:${workDayHours.Minutes.toString().padStart(2, "0")}`,
+            OverTimeStirng: `${overTimeHours.IsNegative ? "-" : ""}${overTimeHours.Hours.toString().padStart(2, "0")}:${overTimeHours.Minutes.toString().padStart(2, "0")}`,
+            MillisecondsOvertime: overTimeMilliseconds
+        };
+        if (overTimeMilliseconds > 0)
+        {
+            result.OverTimeStirng = "+" + result.OverTimeStirng;
+        }
+
+        return result;
     }
     // #endregion
 
@@ -185,7 +340,34 @@ export class HistoryComponent implements AfterViewInit
             historyDays.push(TimeRepositoryService.ConvertWorkDayToHistoryDay(workDay));
         }
 
-        this.DataSource.data = historyDays;
+        let hashTable: WorkDayGrouped = {};
+        this.HistoryDaysByMonth = new Array<WorkDayGroup>();
+        for (let historyDay of historyDays)
+        {
+            let monthKey = historyDay.Date.getFullYear() * 12 +  historyDay.Date.getMonth();
+
+            if (typeof hashTable[monthKey] !== "object")
+            {
+                hashTable[monthKey] = {
+                    Timestamp: new Date(
+                        historyDay.Date.getFullYear(),
+                        historyDay.Date.getMonth(),
+                        1
+                    ),
+                    WorkDays: new Array<WorkDayOverview>()
+                };
+                this.HistoryDaysByMonth.push(hashTable[monthKey])
+            }
+
+            hashTable[monthKey].WorkDays.push(historyDay);
+        }
+
+        this.HistoryDaysByMonth.sort((a, b) => { return b.Timestamp.getTime() - a.Timestamp.getTime(); });
+
+        for (let group of this.HistoryDaysByMonth)
+        {
+            group.WorkDays.sort((a, b) => { return b.Date.getTime() - a.Date.getTime(); })
+        }
     }
     // #endregion
 }

@@ -1,58 +1,46 @@
-<div class="Header">
-    <p class="Text">Letzen Arbeitszeiten</p>
-    <button mat-flat-button (click)="this.ExportAsCsv()">
-        <mat-icon aria-hidden="false" aria-label="export csv" fontIcon="download"></mat-icon>
-    </button>
-</div>
-<table mat-table [dataSource]="this.DataSource" matSort>
-
-    <!-- Date Column -->
-    <ng-container matColumnDef="Date">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Datum</th>
-        <td mat-cell *matCellDef="let element">{{element.Date | date:"dd.MM&nbsp;.yyyy"}}</td>
-    </ng-container>
-
-    <!-- ToWork Column -->
-    <ng-container matColumnDef="ToWork">
-        <th mat-header-cell *matHeaderCellDef>Fahrtweg</th>
-        <td mat-cell *matCellDef="let element">{{element.StartToWork | date:"HH:mm"}} - {{element.EndToWork | date:"HH:mm"}}</td>
-    </ng-container>
-
-    <!-- Work Column -->
-    <ng-container matColumnDef="Work">
-        <th mat-header-cell *matHeaderCellDef>Arbeit</th>
-        <td mat-cell *matCellDef="let element">{{element.StartWork | date:"HH:mm"}} - {{element.EndWork | date:"HH:mm"}}</td>
-    </ng-container>
-
-    <!-- ToHome Column -->
-    <ng-container matColumnDef="ToHome">
-        <th mat-header-cell *matHeaderCellDef>Fahrzeit</th>
-        <td mat-cell *matCellDef="let element">{{element.StartToHome | date:"HH:mm"}} - {{element.EndToHome | date:"HH:mm"}}</td>
-    </ng-container>
-
-    <!-- WorkTime Column -->
-    <ng-container matColumnDef="WorkTime">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Arbeitszeit</th>
-        <td mat-cell *matCellDef="let element">{{element.WorkTimeMs | timeSpanPipe}} h</td>
-    </ng-container>
-
-    <!-- DriveTime Column -->
-    <ng-container matColumnDef="DriveTime">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Fahrzeit</th>
-        <td mat-cell *matCellDef="let element">{{element.DriveTimeMs | timeSpanPipe}} h</td>
-    </ng-container>
-
-    <!-- Remove Column -->
-    <ng-container matColumnDef="Remove">
-        <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell 
-            *matCellDef="let element"
-            (click)="this.DeleteWorkDayEntry(element.Date)"
-            class="Clickable">
-            <mat-icon aria-hidden="false" aria-label="delete" fontIcon="delete"></mat-icon>
-        </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="this.DisplayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: this.DisplayedColumns;"></tr>
-</table>
+<ng-container *ngFor="let monthGroup of this.HistoryDaysByMonth; let first = first;">
+    <div class="MonthHeader">
+        <p>{{this.GetMonthNumberByIndex(monthGroup.Timestamp.getMonth())}} {{monthGroup.Timestamp.getFullYear()}}</p>
+        <div class="Spacer"></div>
+        <mat-icon (click)="this.ExportAsCsv()"
+            aria-hidden="false"
+            aria-label="export csv"
+            fontIcon="download"></mat-icon>
+    </div>
+    <div class="DaysContainer">
+        <div *ngFor="let historyDay of monthGroup.WorkDays"
+            class="WorkDayContainer"
+            (click)="this.DeleteWorkDayEntry(historyDay.Date);">
+            <div class="DayColumn">
+                <p>{{this.GetWeekDayNameByIndex(historyDay.Date.getDay()).substring(0, 2)}}.</p>
+                <p class="Number">{{historyDay.Date.getDate()}}</p>
+            </div>
+            <div class="TimeRanges">
+                <p class="WorkTime">
+                    <span *ngIf="historyDay.StartWork">{{this.FormatDate(historyDay.StartWork, "HH:mm")}}</span>
+                    <span> - </span>
+                    <span *ngIf="historyDay.EndWork">{{this.FormatDate(historyDay.EndWork, "HH:mm")}}</span>
+                </p>
+                <p class="TransferTime">
+                    <span *ngIf="historyDay.StartToWork">{{this.FormatDate(historyDay.StartToWork, "HH:mm")}}</span>
+                    <span> - </span>
+                    <span *ngIf="historyDay.EndToWork">{{this.FormatDate(historyDay.EndToWork, "HH:mm")}}</span>
+                    <span> > </span>
+                    <span *ngIf="historyDay.StartToHome">{{this.FormatDate(historyDay.StartToHome, "HH:mm")}}</span>
+                    <span> - </span>
+                    <span *ngIf="historyDay.EndToHome">{{this.FormatDate(historyDay.EndToHome, "HH:mm")}}</span>
+                </p>
+            </div>
+            <div>
+                <p class="Time">{{this.GetWorkTimeSum(historyDay).TimeString}}</p>
+                <p class="OverTime"
+                    [ngClass]="{ 'InfoColor': this.GetWorkTimeSum(historyDay).MillisecondsOvertime < 0,
+                                 'SuccessColor': this.GetWorkTimeSum(historyDay).MillisecondsOvertime > 0,
+                                 'WarningColor': this.GetWorkTimeSum(historyDay).MillisecondsOvertime > 2 * 60 * 60 * 1000,
+                                 'ErrorColor': this.GetWorkTimeSum(historyDay).MillisecondsOvertime > 4 * 60 * 60 * 1000 }">
+                    {{this.GetWorkTimeSum(historyDay).OverTimeStirng}}
+                </p>
+            </div>
+        </div>
+    </div>
+</ng-container>
