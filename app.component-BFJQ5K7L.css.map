@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/root/Projects/WorkTimes/src/app/app.component.less"],
+  "sourcesContent": [":host {\n    flex-grow: 1;\n\n    display: flex;\n    flex-direction: column;\n}\n\n.Body {\n    flex-grow: 1;\n}"],
+  "mappings": "AAAA,MACI,UAAA,EAEA,QAAA,KACA,eAAA,OAGJ,CAAA,KACI,UAAA",
+  "names": []
+}

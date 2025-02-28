@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/components/dashboard/root/Projects/WorkTimes/src/app/components/dashboard/dashboard.component.less"],
+  "sourcesContent": [":host {\n    display: flex;\n    flex-direction: column;\n}"],
+  "mappings": "AAAA,MACI,QAAA,KACA,eAAA",
+  "names": []
+}

@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/components/history/root/Projects/WorkTimes/src/app/components/history/history.component.less"],
-  "sourcesContent": [":host\n{\n    display: flex;\n    flex-direction: column;\n\n    gap: 10px;\n\n    margin: 10px;\n    padding: 10px;\n\n    background-color: var(--ContainerColor);\n\n    border-style: solid;\n    border-width: 1px;\n    border-color: var(--ContainerBorderColor);\n\n    overflow: auto;\n}\n\n.Header {\n    display: flex;\n    flex-direction: row;\n    gap: 10px;\n\n    .Text {\n        flex-grow: 1;\n    }\n}\n\nbutton {\n    mat-icon {\n        margin: 0;\n    }\n}"],
-  "mappings": "AAAA,MAEI,QAAA,KACA,eAAA,OAEA,IAAA,KALJ,OAOI,KAPJ,QAQI,KAEA,iBAAkB,IAAA,kBAElB,aAAA,MACA,aAAA,IACA,aAAc,IAAA,wBAEd,SAAA,KAGJ,CAAA,OACI,QAAA,KACA,eAAA,IACA,IAAA,KAHJ,CAAA,OAKI,CAAA,KACI,UAAA,EAIR,OACI,SA9BJ,OA+BQ",
-  "names": []
-}

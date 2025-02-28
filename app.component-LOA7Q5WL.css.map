@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/root/Projects/WorkTimes/src/app/app.component.less"],
-  "sourcesContent": ["@ThemeColor: #cf7703;\n\n:host {\n    flex-grow: 1;\n\n    display: flex;\n    flex-direction: column;\n}\n\n.TabBar {\n    display: flex;\n    flex-direction: row;\n\n    @tabBarHeight: 40px;\n\n    height: @tabBarHeight;\n\n    border-bottom-style: solid;\n    border-bottom-width: 2px;\n    border-bottom-color: #EEEEEE;\n\n    a {\n        flex-grow: 1;\n\n        display: flex;\n        flex-direction: row;\n\n        text-decoration: none;\n        color: var(--FontColor);\n\n        div {\n            flex-grow: 1;\n\n            text-align: center;\n            line-height: @tabBarHeight;\n\n            &.Active {\n                border-bottom-style: solid;\n                border-bottom-color: @ThemeColor;\n                border-bottom-width: 3px;\n\n                font-weight: bold;\n            }\n        }\n    }\n}\n\n.Body {\n    flex-grow: 1;\n}"],
-  "mappings": "AAEA,MACI,UAAA,EAEA,QAAA,KACA,eAAA,OAGJ,CAAA,OACI,QAAA,KACA,eAAA,IAIA,OAAA,KAEA,oBAAA,MACA,oBAAA,IACA,oBAAA,KAVJ,CAAA,OAYI,EACI,UAAA,EAEA,QAAA,KACA,eAAA,IAEA,gBAAA,KACA,MAAO,IAAA,aAnBf,CAAA,OAYI,EASI,IACI,UAAA,EAEA,WAAA,OACA,YAAA,KAEA,CA3BZ,OAYI,EASI,GAMK,CAAA,OACG,oBAAA,MACA,oBAAA,QACA,oBAAA,IAEA,YAAA,IAMhB,CAAA,KACI,UAAA",
-  "names": []
-}
