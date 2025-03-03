@@ -1,5 +1,5 @@
 <ng-container *ngFor="let monthGroup of this.HistoryDaysByMonth; let first = first;">
-    <div class="MonthHeader">
+    <div class="MonthHeader" [class.First]="first">
         <p>{{this.GetMonthNumberByIndex(monthGroup.Timestamp.getMonth())}} {{monthGroup.Timestamp.getFullYear()}}</p>
         <div class="Spacer"></div>
         <mat-icon (click)="this.ExportAsCsv()"

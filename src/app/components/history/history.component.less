@@ -8,8 +8,6 @@
     gap: 5px;
 
     margin: 15px;
-    margin-left: 25px;
-    margin-right: 25px;
 
     overflow: auto;
 }
@@ -26,10 +24,22 @@ p {
     display: flex;
     flex-direction: row;
 
+    margin-top: 10px;
     margin-bottom: 10px;
+
+    p {
+        line-height: 24px;
+    }
 
     mat-icon {
         cursor: pointer;
+        display: none;
+    }
+
+    &.First {
+        mat-icon {
+            display: initial;
+        }
     }
 }
 
