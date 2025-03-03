@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { CommonModule, DatePipe } from '@angular/common';
@@ -91,9 +91,18 @@ export class HistoryComponent
         this.timeRepositoryService = timeRepositoryService;
 
         this.HistoryDaysByMonth = new Array<WorkDayGroup>();
+        this.StatusChange = new EventEmitter<void>();
 
         this.FillDataSource();
     }
+    // #endregion
+
+    // #region Outputs
+    /**
+     * Wird ausgelöst, wenn der Benutzer die History verändert (z.B. Löschen).
+     */
+    @Output()
+    public readonly StatusChange: EventEmitter<void>;
     // #endregion
 
     // #region HistoryDaysByMonth
@@ -124,6 +133,8 @@ export class HistoryComponent
 
             this.logger.debug("HistoryComponent > DeleteWorkDayEntry: Aktualisiert die angezeigten Daten...");
             this.FillDataSource();
+
+            this.StatusChange.emit();
         }
         else
         {
@@ -325,7 +336,7 @@ export class HistoryComponent
     /**
      * Füllt die DatenQuelle von der Tabelle mit den letzten Zeiten
      */
-    private async FillDataSource(): Promise<void>
+    public async FillDataSource(): Promise<void>
     {
         this.logger.info("HistoryComponent > FillDataSource: Wurde aufgerufen");
 

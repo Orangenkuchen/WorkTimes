@@ -24,4 +24,4 @@ Das Projekt verwendet Angular und kann mit `ng serve` debugged werden.
 Zum debuggen vom ServiceWorker reicht der interne Angular-Development-Server nicht aus (da ServiceWorker nicht korrekt gehandelt werden).
 Um diesen zu debuggen kann folgender Befehl verwendet werden `ng build; npx http-server -p 8080 -c-1 dist/work-times/browser`.
 
-Zum deployen auf Github.io kann folgender Befehl verwendet werden `ng deploy --base-href=./WorkTimes;`;
+Zum deployen auf Github.io kann folgender Befehl verwendet werden `https://orangenkuchen.github.io/WorkTimes`;

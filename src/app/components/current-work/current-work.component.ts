@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { TimeRepositoryService } from '../../services/time-repository/time-repository.service';
 import { WorkDay } from '../../entities/WorkDay';
 import { CommonModule } from '@angular/common';
@@ -106,6 +106,7 @@ export class CurrentWorkComponent
         this.sanitizer = sanitizer;
 
         this.CurrentStatus = TimeStatus.Initial;
+        this.StatusChange = new EventEmitter<void>();
 
         this.DayStatusChart = null;
 
@@ -113,6 +114,14 @@ export class CurrentWorkComponent
         this.RefreshCurrentDayAndTimeStatus();
         //this.LoadAndSetStateGrafic();
     }
+    // #endregion
+
+    // #region Outputs
+    /**
+     * Wird ausgelöst, wenn sich der aktuelle Status verändert durch den Benutzer.
+     */
+    @Output()
+    public readonly StatusChange: EventEmitter<void>;
     // #endregion
 
     // #region TimeStatus
@@ -173,6 +182,8 @@ export class CurrentWorkComponent
         this.logger.debug("CurrentWorkComponent > StartTransfer: Aktualisiere die angezeigten TimeSlices...");
         this.RefreshCurrentDayAndTimeStatus();
 
+        this.StatusChange.emit();
+
         //this.LoadAndSetStateGrafic();
     }
     // #endregion
@@ -200,6 +211,9 @@ export class CurrentWorkComponent
 
         this.logger.debug("CurrentWorkComponent > EndTransfer: Aktualisiere die angezeigten TimeSlices...");
         this.RefreshCurrentDayAndTimeStatus();
+
+        this.StatusChange.emit();
+
         //this.LoadAndSetStateGrafic();
     }
     // #endregion
@@ -233,6 +247,9 @@ export class CurrentWorkComponent
 
         this.logger.debug("CurrentWorkComponent > StartWork: Aktualisiere die angezeigten TimeSlices...");
         this.RefreshCurrentDayAndTimeStatus();
+
+        this.StatusChange.emit();
+
         //this.LoadAndSetStateGrafic();
     }
     // #endregion
@@ -260,6 +277,9 @@ export class CurrentWorkComponent
 
         this.logger.verbose("CurrentWorkComponent > EndWork: Aktualisiere die angezeigten TimeSlices...");
         this.RefreshCurrentDayAndTimeStatus();
+
+        this.StatusChange.emit();
+
         //this.LoadAndSetStateGrafic();
     }
     // #endregion
@@ -269,7 +289,7 @@ export class CurrentWorkComponent
      * Ermittelt den aktuellen Arbeitstag aus der Datenbank erneut
      * und füllt ahnhand dessen die Variable {@link CurrentStatus}
      */
-    private async RefreshCurrentDayAndTimeStatus(): Promise<void>
+    public async RefreshCurrentDayAndTimeStatus(): Promise<void>
     {
         this.logger.info("CurrentWorkComponent > RefreshCurrentDayAndTimeStatus: Wurde aufgerufen");
 
