@@ -29,6 +29,15 @@
     border-radius: @DefaultContainerRadius;
     padding: 15px;
 
+    .TextContainer {
+        display: flex;
+        flex-direction: row;
+
+        gap: 10px;
+
+        line-height: 24px;
+    }
+
     .TimeContainer {
         display: flex;
         flex-direction: row;
@@ -89,4 +98,21 @@
 
 .Hide {
     display: none;
+}
+
+.Rotate {
+    animation-name: Rotate2D;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+@keyframes Rotate2D {
+    from {
+        transform: rotate(0);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
 }

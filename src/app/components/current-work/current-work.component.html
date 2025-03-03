@@ -1,6 +1,17 @@
 <ng-container *ngIf="this.CurrentDayWorkPromise | async; let dayDisplay">
     <div class="TravelContainer">
-        <p>Fahrzeit</p>
+        <div class="TextContainer">
+            <mat-icon aria-hidden="true"
+                fontIcon="directions_car"></mat-icon>
+            <p>Fahrzeit</p>
+            <mat-icon *ngIf="(dayDisplay.TransferTimeBeforeWork.Start != null &&
+                             dayDisplay.TransferTimeBeforeWork.End == null) ||
+                             (dayDisplay.TransferTimeAfterWork.Start != null &&
+                             dayDisplay.TransferTimeAfterWork.End == null)"
+                class="Rotate"
+                aria-hidden="true"
+                fontIcon="settings"></mat-icon>
+        </div>
         <div class="TimeContainer">
             <p class="Time"
                 appLiveTimeSpan
@@ -8,25 +19,34 @@
                 #timeDiff=liveTimeSpan
                 [StartTime]="dayDisplay.TransferTimeBeforeWork.Start"
                 [EndTime]="dayDisplay.TransferTimeBeforeWork.End"
-                [Format]="'h:mm'">00:00</p>
+                [Format]="'h:mm'">0:00</p>
             <p class="Time"
                 appLiveTimeSpan
                 [class.Hide]="dayDisplay.TransferTimeAfterWork.Start == null"
                 [StartTime]="dayDisplay.TransferTimeAfterWork.Start"
                 [EndTime]="dayDisplay.TransferTimeAfterWork.End"
                 [Format]="'h:mm'"
-                [TimeDeltaInMs]="timeDiff.LiveTimeDiffInMs">00:00</p>
+                [TimeDeltaInMs]="timeDiff.LiveTimeDiffInMs">0:00</p>
         </div>
     </div>
     <div class="WorkContainer">
-        <p>Arbeitszeit</p>
+        <div class="TextContainer">
+            <mat-icon aria-hidden="true"
+                fontIcon="work"></mat-icon>
+            <p>Arbeitszeit</p>
+            <mat-icon *ngIf="dayDisplay.WorkTime.Start != null &&
+                             dayDisplay.WorkTime.End == null"
+                class="Rotate"
+                aria-hidden="true"
+                fontIcon="settings"></mat-icon>
+        </div>
         <div class="TimeContainer">
             <p class="Time"
                 appLiveTimeSpan
                 #timeDiffLeft=liveTimeSpan
                 [StartTime]="dayDisplay.WorkTime.Start"
                 [EndTime]="dayDisplay.WorkTime.End"
-                [Format]="'h:mm'">00:00</p>
+                [Format]="'h:mm'">0:00</p>
             <div class="Spacer"></div>
             <p class="OverTime"
                 appLiveTimeSpan
