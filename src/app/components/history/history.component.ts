@@ -315,7 +315,7 @@ export class HistoryComponent
 
         let workDayHours = LiveTimeSpanDirective.SplitMillisecondsIntoParts(millisecondsWorked);
 
-        let overTimeMilliseconds = millisecondsWorked - (8 * 60 * 60 * 1000);
+        let overTimeMilliseconds = millisecondsWorked - ((8 * 60 + 45) * 60 * 1000);
         let overTimeHours = LiveTimeSpanDirective.SplitMillisecondsIntoParts(overTimeMilliseconds);
 
         let result: WorkDayTimes = {

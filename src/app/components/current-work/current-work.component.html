@@ -53,7 +53,7 @@
                 [StartTime]="dayDisplay.TransferTimeBeforeWork.Start"
                 [EndTime]="dayDisplay.TransferTimeBeforeWork.End"
                 [Format]="'+h:mm'"
-                [TimeDeltaInMs]="((-8 * 60 + 45) * 60 * 1000) + timeDiffLeft.LiveTimeDiffInMs"
+                [TimeDeltaInMs]="(-(8 * 60 + 45) * 60 * 1000) + timeDiffLeft.LiveTimeDiffInMs"
                 #timeDiffRight=liveTimeSpan
                 [ngClass]="{ 'InfoColor': timeDiffRight.LiveTimeDiffInMs < 0,
                              'SuccessColor': timeDiffRight.LiveTimeDiffInMs > 0,
