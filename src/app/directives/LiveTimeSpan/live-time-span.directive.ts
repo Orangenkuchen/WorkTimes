@@ -226,7 +226,14 @@ export class LiveTimeSpanDirective implements OnDestroy, OnChanges
 
             if (timeDifference < 0)
             {
-                result = result.replaceAll("+", "-");
+                if (result.indexOf("+") != -1)
+                {
+                    result = result.replaceAll("+", "-");
+                }
+                else
+                {
+                    result = `-${result}`;
+                }
             }
 
             (<HTMLElement>this.elementRef.nativeElement).innerText = result;

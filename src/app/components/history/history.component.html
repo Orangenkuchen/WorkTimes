@@ -32,7 +32,7 @@
                 </p>
             </div>
             <div>
-                <p class="Time">{{this.GetWorkTimeSum(historyDay).TimeString}}</p>
+                <p class="Time">{{this.GetWorkTimeSum(historyDay, -45 * 60 * 1000).TimeString}}</p>
                 <p class="OverTime"
                     [ngClass]="{ 'InfoColor': this.GetWorkTimeSum(historyDay).MillisecondsOvertime < 0,
                                  'SuccessColor': this.GetWorkTimeSum(historyDay).MillisecondsOvertime > 0,

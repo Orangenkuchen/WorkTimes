@@ -293,10 +293,11 @@ export class HistoryComponent
      * Ermittelt die Summe der Arbeitszeit vom Tag
      * 
      * @param workDayOverview Der Arbeitstag, der summiert werden soll
+     * @param deltaMilliseconds Die Millsekuden, die auf die Summe der Zeit aufgerechnet werden soll
      */
-    public GetWorkTimeSum(workDayOverview: WorkDayOverview): WorkDayTimes
+    public GetWorkTimeSum(workDayOverview: WorkDayOverview, deltaMilliseconds: number = 0): WorkDayTimes
     {
-        let millisecondsWorked = 0;
+        let millisecondsWorked = deltaMilliseconds;
 
         if (workDayOverview.StartToWork != null && workDayOverview.EndToWork != null)
         {
@@ -319,7 +320,7 @@ export class HistoryComponent
         let overTimeHours = LiveTimeSpanDirective.SplitMillisecondsIntoParts(overTimeMilliseconds);
 
         let result: WorkDayTimes = {
-            TimeString: `${workDayHours.Hours.toString().padStart(2, "0")}:${workDayHours.Minutes.toString().padStart(2, "0")}`,
+            TimeString: `${overTimeHours.IsNegative ? "-" : ""}${workDayHours.Hours.toString().padStart(2, "0")}:${workDayHours.Minutes.toString().padStart(2, "0")}`,
             OverTimeStirng: `${overTimeHours.IsNegative ? "-" : ""}${overTimeHours.Hours.toString().padStart(2, "0")}:${overTimeHours.Minutes.toString().padStart(2, "0")}`,
             MillisecondsOvertime: overTimeMilliseconds
         };
