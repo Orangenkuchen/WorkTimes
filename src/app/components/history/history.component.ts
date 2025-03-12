@@ -320,7 +320,7 @@ export class HistoryComponent
         let overTimeHours = LiveTimeSpanDirective.SplitMillisecondsIntoParts(overTimeMilliseconds);
 
         let result: WorkDayTimes = {
-            TimeString: `${overTimeHours.IsNegative ? "-" : ""}${workDayHours.Hours.toString().padStart(2, "0")}:${workDayHours.Minutes.toString().padStart(2, "0")}`,
+            TimeString: `${workDayHours.IsNegative ? "-" : ""}${workDayHours.Hours.toString().padStart(2, "0")}:${workDayHours.Minutes.toString().padStart(2, "0")}`,
             OverTimeStirng: `${overTimeHours.IsNegative ? "-" : ""}${overTimeHours.Hours.toString().padStart(2, "0")}:${overTimeHours.Minutes.toString().padStart(2, "0")}`,
             MillisecondsOvertime: overTimeMilliseconds
         };
