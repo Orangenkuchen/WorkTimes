@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1741799746799,
+  "timestamp": 1741799891118,
   "index": "https://orangenkuchen.github.io/WorkTimes/index.html",
   "assetGroups": [
     {
@@ -15,7 +15,7 @@
         "https://orangenkuchen.github.io/WorkTimes/chunk-MSFYXMLE.js",
         "https://orangenkuchen.github.io/WorkTimes/favicon.ico",
         "https://orangenkuchen.github.io/WorkTimes/index.html",
-        "https://orangenkuchen.github.io/WorkTimes/main-YDTK54VA.js",
+        "https://orangenkuchen.github.io/WorkTimes/main-2YXGZXXD.js",
         "https://orangenkuchen.github.io/WorkTimes/manifest.webmanifest",
         "https://orangenkuchen.github.io/WorkTimes/polyfills-Q763KACN.js",
         "https://orangenkuchen.github.io/WorkTimes/styles-K22ML2DC.css"
@@ -46,8 +46,8 @@
     "https://orangenkuchen.github.io/WorkTimes/chunk-75NCK5NY.js": "68194886333e1d561c032668b89da2f84d6bb5b7",
     "https://orangenkuchen.github.io/WorkTimes/chunk-MSFYXMLE.js": "1eac3f67fd9ab6693f9d41a12ea1ccb9cd9479d6",
     "https://orangenkuchen.github.io/WorkTimes/favicon.ico": "9686238a20b1a621601311666d2341d18fbc7f22",
-    "https://orangenkuchen.github.io/WorkTimes/index.html": "1f3bb08f003e203b0a1c1e1295efeb3c9f7249b2",
-    "https://orangenkuchen.github.io/WorkTimes/main-YDTK54VA.js": "aa6016641dc09b953ae1dbf6cbc4204ac534ec8b",
+    "https://orangenkuchen.github.io/WorkTimes/index.html": "d2726a318f866005989498887b2d8091c034c656",
+    "https://orangenkuchen.github.io/WorkTimes/main-2YXGZXXD.js": "f6e574ce61b03eb108b505ad032effa71cc15500",
     "https://orangenkuchen.github.io/WorkTimes/manifest.webmanifest": "f97d78dcf0d1833f05667abf26b496ec76e2e00a",
     "https://orangenkuchen.github.io/WorkTimes/media/ubuntu-light-webfont-2TRHHGVR.woff2": "09f6b2b4316749b1435f06317006878fc2396530",
     "https://orangenkuchen.github.io/WorkTimes/polyfills-Q763KACN.js": "e2a9f135443e4bc6115449a6098604d881bf5931",
